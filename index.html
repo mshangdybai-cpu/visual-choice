@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visual Choice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: one quiet upload screen; after upload the screenshot itself becomes the report, verdict beside it */
+:root{
+  --paper:#F5F6F8; --surface:#FFFFFF; --ink:#0E1726; --muted:#5B6678; --line:#DDE2E9; --accent:#0F5BD8; --accent-ink:#FFFFFF;
+  --good:#1F8A4C; --warn:#B9730A; --bad:#C8343B;
+  --c-emotion:#E5484D; --c-urgency:#EE7A12; --c-share:#D6409F; --c-general:#8457E0; --c-vague:#8D6A4A;
+  --c-clickbait:#D49B00; --c-promise:#0F9F8C; --c-phishing:#A3001B; --c-link:#0089C2; --c-format:#6E7787; --c-source:#2F9E44;
+  --f-display:"Unbounded","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --radius:16px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0C121B; --surface:#131B27; --ink:#E7ECF3; --muted:#9AA6B8; --line:#243042; --accent:#6B9BFF; --accent-ink:#0C121B;
+    --good:#4CC27A; --warn:#E5A53A; --bad:#FF6B70; --c-phishing:#FF4D6A; --c-vague:#C49A72; --c-format:#97A1B2;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0C121B; --surface:#131B27; --ink:#E7ECF3; --muted:#9AA6B8; --line:#243042; --accent:#6B9BFF; --accent-ink:#0C121B;
+  --good:#4CC27A; --warn:#E5A53A; --bad:#FF6B70; --c-phishing:#FF4D6A; --c-vague:#C49A72; --c-format:#97A1B2;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;min-height:100vh;display:flex;flex-direction:column}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-0.015em}
+.wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 20px}
+button{font:inherit}
+:focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:2px}
+[hidden]{display:none!important}
+
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:18px;padding-bottom:18px}
+.brand{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
+.brand b{font:700 1.02rem var(--f-display)}
+nav a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;padding:6px 10px;border-radius:8px}
+nav a:hover,nav a[aria-current="page"]{color:var(--ink);background:var(--surface)}
+main{flex:1;padding-bottom:40px}
+footer{color:var(--muted);font-size:.8rem;padding:16px 0 28px}
+
+/* start */
+.start{min-height:calc(100vh - 170px);display:grid;align-content:center;gap:28px;padding:24px 0;max-width:720px}
+.start h1{font-size:clamp(2rem,6vw,3.4rem);line-height:1.05;font-weight:700}
+.start p.lead{margin:0;color:var(--muted);font-size:1.08rem;max-width:56ch}
+.drop{position:relative;border:1.5px dashed color-mix(in srgb,var(--ink) 28%,transparent);border-radius:20px;background:var(--surface);padding:42px 24px;display:grid;gap:10px;justify-items:start;cursor:pointer;transition:border-color .15s, background .15s}
+.drop:hover,.drop.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 5%,var(--surface))}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.drop .ico{width:52px;height:52px;border-radius:14px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center}
+.drop strong{font-size:1.1rem}
+.drop span{color:var(--muted);font-size:.9rem}
+.drop:focus-within{outline:3px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:3px}
+.below{display:flex;gap:18px;flex-wrap:wrap;align-items:center;font-size:.88rem;color:var(--muted)}
+.linkbtn{appearance:none;background:none;border:0;padding:0;color:var(--accent);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.dot-ok{display:inline-flex;align-items:center;gap:7px}
+.dot-ok::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--good)}
+
+/* working */
+.work{min-height:calc(100vh - 170px);display:grid;align-content:center;justify-items:start;gap:18px;max-width:560px}
+.work img{max-width:180px;max-height:240px;border-radius:12px;border:1px solid var(--line);object-fit:cover}
+.bar{width:100%;height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+.work .st{font:600 1.05rem var(--f-body)}
+.work .sub{color:var(--muted);font-size:.88rem}
+
+/* shared stage: screenshot + side */
+.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,420px);gap:28px;align-items:start;padding-top:8px}
+@media (max-width:860px){.stage{grid-template-columns:1fr}}
+.figure{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px;max-height:82vh;overflow:auto}
+.shot{position:relative;line-height:0}
+.shot img{width:100%;height:auto;border-radius:8px;display:block}
+.box{position:absolute;border:2.5px solid var(--c);background:color-mix(in srgb,var(--c) 16%,transparent);border-radius:4px;cursor:help}
+.box:hover::after,.box:focus::after{content:attr(data-label);position:absolute;left:-2px;bottom:calc(100% + 4px);white-space:nowrap;background:var(--c);color:#fff;font:600 12px/1.2 var(--f-body);padding:4px 7px;border-radius:5px;z-index:3;pointer-events:none}
+.side{display:grid;gap:16px;position:sticky;top:16px}
+@media (max-width:860px){.side{position:static}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:grid;gap:14px}
+.kicker{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+
+/* guess */
+.guess h2{font-size:1.35rem;line-height:1.2}
+.guess p{margin:0;color:var(--muted)}
+.choices{display:grid;gap:10px}
+.choice{appearance:none;display:flex;align-items:center;gap:14px;text-align:left;width:100%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:14px 16px;cursor:pointer;font-weight:600;font-size:1rem}
+.choice:hover{border-color:var(--v)}
+.choice i{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--v) 15%,transparent);color:var(--v);font:700 1rem var(--f-mono);font-style:normal}
+.choice small{display:block;color:var(--muted);font-weight:400;font-size:.84rem}
+
+/* result */
+.gauge{display:flex;align-items:center;gap:18px}
+.score{font:600 2.8rem/1 var(--f-mono);font-variant-numeric:tabular-nums}
+.score small{font-size:.9rem;color:var(--muted);margin-left:4px}
+.pill{display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:.92rem;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,var(--v) 13%,transparent);color:var(--v);width:max-content;max-width:100%}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--v)}
+.vdesc{margin:0;font-size:.95rem}
+.compare{border-radius:12px;padding:14px;background:color-mix(in srgb,var(--v) 9%,var(--surface));border:1px solid color-mix(in srgb,var(--v) 30%,transparent);display:grid;gap:4px}
+.compare b{color:var(--v)}
+.compare p{margin:0;font-size:.92rem}
+.compare .meta{font-size:.8rem;color:var(--muted)}
+.found{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.found li{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:start;font-size:.92rem}
+.found li::before{content:"";width:12px;height:12px;border-radius:3px;background:var(--c);margin-top:5px}
+.found em{font-style:normal;color:var(--muted);font-size:.84rem;display:block}
+.found .n{font:600 .85rem var(--f-mono);color:var(--muted)}
+.flag{font-size:.88rem;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--warn) 12%,transparent)}
+.flag.ok{background:color-mix(in srgb,var(--good) 12%,transparent)}
+.advice{margin:0;padding-left:18px;display:grid;gap:8px;font-size:.92rem}
+.advice b{display:block}
+.actions{display:grid;gap:8px}
+.btn{appearance:none;border:0;border-radius:12px;padding:13px 16px;font-weight:600;cursor:pointer;background:var(--accent);color:var(--accent-ink);text-align:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+details.edit{margin-top:12px;font-size:.9rem}
+details.edit summary{cursor:pointer;color:var(--muted);font-weight:500}
+details.edit textarea{width:100%;min-height:150px;margin-top:10px;border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--paper);color:var(--ink);font:400 .95rem/1.5 var(--f-body);resize:vertical}
+details.edit .row{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.small-btn{appearance:none;border:1px solid var(--accent);background:transparent;color:var(--accent);border-radius:8px;padding:7px 12px;font-weight:600;cursor:pointer;font-size:.86rem}
+.notice{font-size:.88rem;padding:10px 12px;border-radius:10px;background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:var(--muted)}
+.legend span::before{content:"";width:11px;height:11px;border-radius:3px;border:2px solid var(--c)}
+
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(8,12,20,.6);display:grid;place-items:center;padding:16px;z-index:20}
+.sheet{background:var(--surface);border-radius:18px;max-width:520px;width:100%;max-height:calc(100% - 16px);overflow:auto;padding:18px;display:grid;gap:12px}
+.sheet img{width:100%;border-radius:10px;border:1px solid var(--line)}
+.sheet .hint{font-size:.84rem;color:var(--muted);margin:0}
+.sheet .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.sheet header{display:flex;justify-content:space-between;align-items:center}
+.x{appearance:none;border:0;background:var(--paper);color:var(--ink);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:1.1rem}
+
+/* about */
+.about{max-width:920px;display:grid;gap:40px;padding:8px 0 20px}
+.about h1{font-size:clamp(2rem,5vw,3rem);line-height:1.05}
+.about h2{font-size:1.25rem;margin-bottom:16px}
+.about .lead{margin:14px 0 0;color:var(--muted);font-size:1.05rem;max-width:62ch}
+.about p{margin:0}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.facts{grid-template-columns:1fr}}
+.facts>div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:8px;align-content:start}
+.facts p{font-size:.95rem}
+.steps,.why,.questions{margin:0;padding:0;list-style:none;display:grid;gap:12px}
+.steps{counter-reset:s;grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:760px){.steps{grid-template-columns:1fr}}
+.steps li{counter-increment:s;display:grid;gap:6px;padding-top:14px;border-top:2px solid var(--ink)}
+.steps li::before{content:counter(s);font:600 .85rem var(--f-mono);color:var(--muted)}
+.steps span,.why span{color:var(--muted);font-size:.93rem}
+.intro{color:var(--muted);max-width:64ch;margin:-6px 0 16px!important}
+.risks{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.risks article{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--c);border-radius:12px;padding:16px 18px;display:grid;gap:6px;align-content:start}
+.risks h3{font-size:.98rem;font-weight:700}
+.risks p{font-size:.92rem;color:var(--muted)}
+.why li{display:grid;grid-template-columns:minmax(150px,220px) 1fr;gap:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.why li:last-child{border-bottom:0}
+@media (max-width:560px){.why li{grid-template-columns:1fr;gap:2px}}
+.questions{counter-reset:q}
+.questions li{counter-increment:q;display:grid;grid-template-columns:38px 1fr;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-weight:500}
+.questions li::before{content:counter(q);width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:600 .9rem var(--f-mono)}
+.closing{font:700 1.15rem/1.4 var(--f-display);max-width:40ch}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">
+      <svg width="34" height="34" viewBox="0 0 44 44" aria-hidden="true">
+        <rect width="44" height="44" rx="12" fill="var(--accent)"/>
+        <path d="M7 22c4-7 9-10.5 15-10.5S33 15 37 22c-4 7-9 10.5-15 10.5S11 29 7 22z" fill="none" stroke="var(--accent-ink)" stroke-width="2.6"/>
+        <circle cx="22" cy="22" r="5.5" fill="var(--accent-ink)"/>
+      </svg>
+      <b>Visual Choice</b>
+    </a>
+    <nav><a href="#" id="nav-home">Тексеру</a><a href="#joba" id="nav-about">Жоба туралы</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- 1. start -->
+  <section class="start" id="v-start">
+    <h1>Скриншотты тексер.</h1>
+    <p class="lead">Посттың, хабарламаның немесе жарнаманың скриншотын жүктеңіз. Visual Choice ондағы манипуляция белгілерін суреттің өзінде көрсетеді.</p>
+    <label class="drop" id="drop">
+      <input type="file" id="file" accept="image/*">
+      <span class="ico" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg></span>
+      <strong>Скриншот жүктеу</strong>
+      <span>Басып таңдаңыз, суретті осында сүйреңіз немесе Ctrl+V арқылы қойыңыз</span>
+    </label>
+    <div class="below">
+      <button class="linkbtn" id="demo" type="button">Мысал скриншотпен көру</button>
+      <span class="dot-ok">Сурет ешқайда жіберілмейді, талдау құрылғыңызда жүреді</span>
+    </div>
+  </section>
+
+  <!-- 2. working -->
+  <section class="work" id="v-work" hidden>
+    <img id="work-img" alt="Жүктелген скриншот">
+    <div class="st" id="work-st">Дайындалуда</div>
+    <div class="bar"><i id="work-bar"></i></div>
+    <div class="sub" id="work-sub">Алғашқы жүктеуде тану модулі 10 МБ шамасында жүктеледі</div>
+    <button class="linkbtn" id="work-back" type="button" hidden>Басқа скриншот таңдау</button>
+  </section>
+
+  <!-- 3/4. stage: guess, then result -->
+  <section class="stage" id="v-stage" hidden>
+    <div>
+      <div class="figure"><div class="shot" id="shot"><img id="shot-img" alt="Тексерілетін скриншот"></div></div>
+      <div class="legend" id="legend" hidden></div>
+      <details class="edit" id="edit" hidden>
+        <summary>Мәтінді түзету (тану қатесі болса)</summary>
+        <textarea id="edit-text" spellcheck="false" aria-label="Скриншоттан танылған мәтін"></textarea>
+        <div class="row"><button class="small-btn" id="edit-run" type="button">Қайта талдау</button><span class="sub" style="font-size:.8rem;color:var(--muted)">Суреттегі белгілер түзетілген мәтінге қарай жаңарады</span></div>
+      </details>
+    </div>
+
+    <div class="side">
+      <div class="panel guess" id="p-guess">
+        <span class="kicker">1-қадам · Алдымен өзіңіз шешіңіз</span>
+        <h2>Бұл скриншоттағы ақпаратқа сенесіз бе?</h2>
+        <p>Скриншотты оқып шығыңыз. Сканердің бағасы сіз жауап бергеннен кейін ашылады.</p>
+        <div class="choices">
+          <button class="choice" data-guess="2" type="button" style="--v:var(--good)"><i>✓</i><span>Сенемін<small>Шынайы ақпарат сияқты</small></span></button>
+          <button class="choice" data-guess="1" type="button" style="--v:var(--warn)"><i>?</i><span>Күмәнданамын<small>Тексеру керек сияқты</small></span></button>
+          <button class="choice" data-guess="0" type="button" style="--v:var(--bad)"><i>×</i><span>Сенбеймін<small>Манипуляция немесе фейк сияқты</small></span></button>
+        </div>
+        <button class="linkbtn" id="skip" type="button" style="justify-self:start;font-size:.86rem">Өткізіп жіберу</button>
+      </div>
+
+      <div id="p-result" hidden style="display:grid;gap:16px">
+        <div class="panel" aria-live="polite">
+          <span class="kicker">Сенімділік индексі</span>
+          <div class="gauge">
+            <svg width="96" height="96" viewBox="0 0 124 124" aria-hidden="true">
+              <circle cx="62" cy="62" r="52" fill="none" stroke="var(--line)" stroke-width="13"/>
+              <circle id="ring" cx="62" cy="62" r="52" fill="none" stroke="var(--good)" stroke-width="13" stroke-linecap="round" transform="rotate(-90 62 62)" stroke-dasharray="326.73" stroke-dashoffset="326.73" style="transition:stroke-dashoffset .6s, stroke .3s"/>
+            </svg>
+            <div><div class="score"><span id="score">–</span><small>/100</small></div></div>
+          </div>
+          <span class="pill" id="pill" style="--v:var(--muted)">–</span>
+          <p class="vdesc" id="vdesc"></p>
+          <div class="compare" id="compare" hidden></div>
+          <div class="notice" id="lowconf" hidden>Мәтін нашар танылды. Нәтиже дәл болуы үшін «Мәтінді түзету» бөлімінде тексеріңіз.</div>
+        </div>
+        <div class="panel">
+          <span class="kicker">Табылған белгілер</span>
+          <ul class="found" id="found"></ul>
+          <div id="flags" style="display:grid;gap:8px"></div>
+        </div>
+        <div class="panel">
+          <span class="kicker">Не істеу керек?</span>
+          <ol class="advice" id="advice"></ol>
+        </div>
+        <div class="actions">
+          <button class="btn" id="make-card" type="button">Отбасы чатына ескерту карточкасын жасау</button>
+          <button class="btn ghost" id="again" type="button">Жаңа скриншот тексеру</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- about -->
+  <section class="about" id="v-about" hidden>
+    <div class="ab-head">
+      <h1>Жоба туралы</h1>
+      <p class="lead">Visual Choice «Контентті талдау және жастардың медиа сауаттылығын арттыру» тақырыбындағы оқушының ғылыми жобасы. Сайт әлеуметтік желідегі скриншоттарды тексеріп, ондағы манипуляция әдістерін суреттің өзінде көрсетеді.</p>
+    </div>
+
+    <div class="facts">
+      <div><span class="kicker">Мақсаты</span><p>Жасөспірімдерді ақпаратқа сену, сенбеу немесе оны бөлісу туралы саналы таңдау жасауға үйрету.</p></div>
+      <div><span class="kicker">Жаңалығы</span><p>Қазақ тіліндегі мәтінді сөз түбірі бойынша талдайды, манипуляцияны скриншоттың үстінде белгілейді, оқушыдан алдымен өз бағасын сұрайды.</p></div>
+      <div><span class="kicker">Кімге арналған</span><p>Мектеп оқушылары, ата-аналар мен мұғалімдер. Ескерту карточкасы арқылы фейкті отбасы чатында тоқтатуға болады.</p></div>
+    </div>
+
+    <div class="ab-block">
+      <h2>Қалай жұмыс істейді</h2>
+      <ol class="steps">
+        <li><b>Скриншот жүктейсіз</b><span>Пост, хабарлама немесе жарнама. Сурет ешқайда жіберілмейді, мәтін құрылғыңызда танылады.</span></li>
+        <li><b>Алдымен өзіңіз шешесіз</b><span>«Сенемін», «Күмәнданамын» немесе «Сенбеймін». Сканердің бағасы содан кейін ашылады.</span></li>
+        <li><b>Сканер белгілерді көрсетеді</b><span>10 критерий бойынша сенімділік индексі шығады, манипуляциялық сөздер суретте белгіленеді.</span></li>
+      </ol>
+    </div>
+
+    <div class="ab-block">
+      <h2>Таңдау мен алданудың қаупі</h2>
+      <p class="intro">Ақпаратқа сену немесе оны бөлісу әр жолы жасалатын таңдау. Қате таңдаудың салдары экраннан шығып, шынайы өмірге әсер етеді.</p>
+      <div class="risks">
+        <article style="--c:var(--c-phishing)"><h3>Ақшадан айырылу</h3><p>Жалған ұтыс, «тегін сыйлық», алдын ала төлем, жалған инвестиция. Алаяқ аударылған ақшаны тез шешіп алады, оны қайтару өте қиын.</p></article>
+        <article style="--c:var(--c-link)"><h3>Жеке деректің ұрлануы</h3><p>SMS-код, құпия сөз немесе карта нөмірін берсеңіз, аккаунтыңыз бен банк шотыңыз бөтен адамның қолына өтеді. Бұзылған аккаунттан достарыңызға да алаяқ хабар кетеді.</p></article>
+        <article style="--c:var(--c-emotion)"><h3>Денсаулыққа зиян</h3><p>«Бір рет ішсеңіз жазыласыз», «дәрігерлер жасырып отыр» деген жалған ем адамды дәрігерге уақытында барудан тыяды.</p></article>
+        <article style="--c:var(--c-urgency)"><h3>Дүрбелең және қоғамға зиян</h3><p>«Су улы», «ертең жарық өшеді» сияқты фейк көп адамды қорқытады, дүкендерде кезек тудырады, жедел қызметтерді бос әуреге салады.</p></article>
+        <article style="--c:var(--c-vague)"><h3>Сенім мен беделден айырылу</h3><p>Фейк таратқан адамға кейін достары мен туыстары сенбей қалады. Қазақстанда көрінеу жалған ақпаратты таратқаны үшін заң бойынша жауапкершілік бар.</p></article>
+        <article style="--c:var(--c-general)"><h3>Ойлаудың тарылуы</h3><p>Алгоритм ұнаған контентті көбірек көрсетеді. Бір жақты ақпаратты ғана көрген адам «сүзгі көпіршігіне» түсіп, басқа пікірді естімей қалады.</p></article>
+      </div>
+    </div>
+
+    <div class="ab-block">
+      <h2>Неге алданамыз?</h2>
+      <ul class="why">
+        <li><b>Эмоция</b><span>Қорқыныш пен ашу сыни ойлауды әлсіретеді, адам тексермей әрекет етеді.</span></li>
+        <li><b>Таныс адамнан келді</b><span>Хабарламаны туысымыз немесе досымыз жіберсе, мазмұнын тексермей сенеміз.</span></li>
+        <li><b>Қайталау</b><span>Бір хабарды бірнеше рет көрсек, ол шындық сияқты көріне бастайды.</span></li>
+        <li><b>Өз ойымызға сәйкес</b><span>Өз көзқарасымызды растайтын ақпаратқа тез сенеміз. Мұны растау бейімділігі дейді.</span></li>
+        <li><b>Асығыстық</b><span>«Шұғыл», «тек бүгін» деген сөздер ойлануға уақыт қалдырмайды.</span></li>
+      </ul>
+    </div>
+
+    <div class="ab-block">
+      <h2>Бөліспес бұрын 5 сұрақ</h2>
+      <ol class="questions">
+        <li>Мұны кім жазды? Аты-жөні, мекемесі бар ма?</li>
+        <li>Қашан жазылды? Ескі жаңалық жаңадай берілмей ме?</li>
+        <li>Дереккөзі қайда? Ресми сайтта бар ма?</li>
+        <li>Бұл мені не сезіндіреді? Қорқыныш пен ашу тексеру керегін білдіреді.</li>
+        <li>Басқа сенімді дереккөздер не дейді?</li>
+      </ol>
+    </div>
+
+    <p class="closing">Сканер шешім шығармайды, тек манипуляция белгілерін көрсетеді. Соңғы таңдау сіздікі.</p>
+    <a class="btn" href="#" style="justify-self:start;text-decoration:none">Скриншот тексеру</a>
+  </section>
+</main>
+
+<footer class="wrap">Visual Choice · Контентті талдау және жастардың медиа сауаттылығын арттыру · Оқушының ғылыми жобасы</footer>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="sheet">
+    <header><h2 id="modal-title" style="font-size:1.05rem">Ескерту карточкасы</h2><button class="x" id="modal-x" type="button" aria-label="Жабу">×</button></header>
+    <img id="card-img" alt="Ескерту карточкасы">
+    <div class="row">
+      <button class="btn" id="c-share" type="button" hidden>Бөлісу</button>
+      <button class="btn" id="c-copy" type="button">Суретті көшіру</button>
+      <button class="btn ghost" id="c-save" type="button">Суретті сақтау</button>
+    </div>
+    <p class="hint" id="c-hint">Көшірген суретті WhatsApp чатына қойыңыз. Батырма істемесе, суретті басып тұрып немесе тінтуірдің оң жағымен сақтаңыз.</p>
+  </div>
+</div>
+
+<script src="ocr/tesseract.min.js"></script>
+<script>
+(function(){
+"use strict";
+/* ================= Dictionaries =================
+   plain term = stem (any suffix) · "=term" exact word · "~regex" raw regex */
+const CATS = [
+  {id:"emotion", name:"Эмоциялық қысым", weight:6, cap:20,
+   desc:"Қорқыныш, ашу немесе таңданыс тудыратын сөздер. Эмоция көтерілгенде адам ақпаратты тексермей сенеді.",
+   terms:["=шок","шокқа","сұмдық","сұмдығ","қорқынышт","қорқыныш","үрей","жантүршіг","жан түршіг","зұлмат","қасірет","апат","дабыл","масқара","ашынға","ашуланд","ызаланд","таңғаларл","ғаламат","сенсац","жойыл","құртады","=улы","уланд","өлім","өліп","қаза бол","құрбан","қауіпті","төтенше","жылатт","жүрек ауыр","ессіз","қырыл","зардап","=ужас","кошмар"]},
+  {id:"urgency", name:"Асықтыру", weight:7, cap:20,
+   desc:"Ойлануға уақыт бермеу. «Шұғыл», «тек бүгін» деген сөздер шешімді тез қабылдатуға арналған.",
+   terms:["шұғыл","дереу","тез арада","тезірек","кешікпе","кешіктірме","бүгін ғана","тек бүгін","соңғы мүмкіндік","соңғы күн","уақыт аз","уақыт қалмады","үлгеріңіз","үлгеріп қал","асығыңыз","асығыңдар","ертең кеш","қалғаны","санаулы","жедел түрде","=срочно"]},
+  {id:"share", name:"Таратуға үндеу", weight:9, cap:22,
+   desc:"Хабарламаны көпке таратуды талап ету тізбекті фейктердің басты белгісі.",
+   terms:["бөлісіңіз","бөлісіңдер","бөлісейік","таратыңыз","таратыңдар","таратайық","жіберіңіз","жіберіңдер","барлығына жібер","барлық топқа","топтарға жібер","=репост","достарыңызға","туыстарыңызға","жақындарыңызға","ата-анаңызға","өшірмеңіз","өшірмей","жасырмаңыз","бұғаттамай","өшіріп тастамай","~(?<![\\p{L}\\p{N}])\\d+\\s+адамға","көп адамға","=перешлите","=отправьте"]},
+  {id:"general", name:"Жалпылау", weight:4, cap:12,
+   desc:"«Бәрі», «ешкім», «ешқашан» сияқты асыра сілтеу. Шынайы ақпарат әдетте нақты әрі шектеулі болады.",
+   terms:["=бәрі","бәріңіз","барлығы","барлық адам","бүкіл халық","ешкім","ешқашан","әрқашан","мүлдем","түгел","кез келген адам","бірде-бір","~(?<![\\p{N}])100\\s?%"]},
+  {id:"vague", name:"Белгісіз билік пен құпия", weight:8, cap:22,
+   desc:"«Ғалымдар дәлелдеді», «бір танысым айтты», «билік жасырып отыр»: кім екені аталмаған дереккөз және қастандық әңгімесі.",
+   terms:["ғалымдар дәлелде","ғалымдар анықта","ғалымдардың айтуынша","сарапшылар айт","сарапшылардың айтуынша","дәрігерлер айт","дәрігерлер ескерт","дәрігерлердің айтуынша","мамандар айт","мамандардың айтуынша","белгілі болды","бір танысым","танысым айт","досым айт","сенімді дереккөз","ішкі ақпарат","аты аталмаған","жасырып отыр","жасырып жатыр","жасырады","айтпайды","көрсетпейді","тыйым салынған ақпарат","шындықты","ақиқатты біл","ешкім айтпа","билік жасыр","әлемдік үкімет","чиптеу","=говорят"]},
+  {id:"clickbait", name:"Кликбейт", weight:6, cap:18,
+   desc:"Қызығушылықты қолдан қыздыратын тақырып: «сенбейсіз», «құпиясы», «соңына дейін қараңыз».",
+   terms:["сенбейсіз","сенбей қаласыз","таң қаласыз","не болғанын","соңына дейін","аяғына дейін","міне не","құпиясы","құпия әдіс","бұны білмейсіз","мұны білмейсіз","ешкім айтпаған","шок болдым","бұл видеоны","көріп шығыңыз"]},
+  {id:"promise", name:"Тым жақсы уәде", weight:7, cap:20,
+   desc:"Тегін сыйлық, кепілдік, жылдам табыс немесе нәтиже. Жарнама мен алаяқтықта жиі кездеседі.",
+   terms:["тегін","сыйлық","сыйға","ұтып ал","ұтыс","жеңдіңіз","кепілдік","кепілді","бір аптада","бір айда","кг арықта","арықтаудың","табыс тап","пассив табыс","салымсыз","инвестиц","жеңілдік","=акция","=арзан","миллион тап","байып","қарызсыз","бонус","дәрісіз","бір рет іш","~күніне\\s+\\d+\\s*(мың|000)\\p{L}*","=бесплатно","=скидка"]},
+  {id:"phishing", name:"Жеке дерек сұрау", weight:15, cap:30,
+   desc:"Карта нөмірі, SMS-код, құпия сөз сұрау алаяқтықтың ең қауіпті белгісі.",
+   terms:["карта нөмір","картаңыздың","картаның нөмір","карта деректер","=cvv","sms-код","sms код","смс код","смс-код","кодты айт","кодты жібер","кодты енгіз","құпия сөз","=пароль","=жсн","=иин","жеке деректер","банк қызметкері","шотыңыз бұғатт","картаңыз бұғат","алдын ала төлем","аударып жібер","каспиге аудар","kaspi-ге аудар"]},
+  {id:"link", name:"Күдікті сілтеме", weight:8, cap:16,
+   desc:"Қысқартылған сілтеме сайттың шын мекенжайын жасырады. «Сілтемеге өтіңіз» деген үндеу де жиі алаяқтыққа апарады.",
+   terms:["~(?:https?:\\/\\/)?(?:bit\\.ly|tinyurl\\.com|clck\\.ru|cutt\\.ly|goo\\.gl|t\\.ly|is\\.gd|rb\\.gy|shorturl\\.at|tiny\\.cc)\\/\\S*","сілтемеге өт","сілтемеге бас","сілтеме бойынша өт","профильдегі сілтеме","биодағы сілтеме"]},
+  {id:"format", name:"Айқай формасы", weight:4, cap:14,
+   desc:"Бас әріппен жазу, қатар леп белгілері, эмодзи тізбегі көзге түсу үшін қолданылады.", terms:[]},
+  {id:"source", name:"Дереккөз белгісі", weight:-7, cap:20, positive:true,
+   desc:"Нақты мекеме, ресми сайт, күн-айы. Бұл белгілер индексті көтереді.",
+   terms:["дереккөз","ресми сайт","ресми парақша","баспасөз қызметі","хабарлады","мәлімдеді","жариялады","ақпаратына сәйкес","~(?<![\\p{L}])[\\w.-]*gov\\.kz\\S*","=egov","~(?<![\\p{N}])\\d{1,2}\\s+(?:қаңтар|ақпан|наурыз|сәуір|мамыр|маусым|шілде|тамыз|қыркүйек|қазан|қараша|желтоқсан)\\p{L}*","~(?<![\\p{N}])(?:19|20)\\d{2}\\s*ж(?:ылы|\\.)"]}
+];
+const CAT=Object.fromEntries(CATS.map(c=>[c.id,c]));
+const CARD_COLORS={emotion:"#E5484D",urgency:"#EE7A12",share:"#D6409F",general:"#8457E0",vague:"#8D6A4A",clickbait:"#D49B00",promise:"#0F9F8C",phishing:"#A3001B",link:"#0089C2",format:"#6E7787",source:"#2F9E44"};
+const FORMAT_RES=[
+  /(?<![\p{L}])\p{Lu}{4,}(?:\s+\p{Lu}{2,})*(?![\p{L}])/gu,
+  /[!?]*!{2,}[!?]*|\?!+/gu,
+  /(?:\p{Extended_Pictographic}️?‍?\s?){2,}/gu
+];
+function esc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
+function compile(t){
+  if(t[0]==="~") return new RegExp(t.slice(1),"giu");
+  const exact=t[0]==="=";
+  const body=esc(exact?t.slice(1):t).replace(/\s+/g,"\\s+");
+  return new RegExp("(?<![\\p{L}\\p{N}])"+body+(exact?"(?![\\p{L}])":"[\\p{L}\\-]*"),"giu");
+}
+CATS.forEach(c=>{c.res=c.terms.map(compile)});
+
+/* ================= Analysis ================= */
+function analyze(text){
+  const raw=[];
+  for(const c of CATS) for(const re of c.res){ re.lastIndex=0; let m;
+    while((m=re.exec(text))){ if(!m[0].length){re.lastIndex++;continue}
+      raw.push({s:m.index,e:m.index+m[0].length,cat:c.id,txt:m[0].trim()}); } }
+  for(const re of FORMAT_RES){ re.lastIndex=0; let m;
+    while((m=re.exec(text))){ if(!m[0].trim().length){re.lastIndex++;continue}
+      const t=m[0].replace(/\s+$/,""); raw.push({s:m.index,e:m.index+t.length,cat:"format",txt:t}); } }
+  raw.sort((a,b)=>a.s-b.s||(b.e-b.s)-(a.e-a.s));
+  const spans=[]; let end=-1;
+  for(const r of raw){ if(r.s>=end){spans.push(r); end=r.e;} }
+  const counts={}, words={};
+  CATS.forEach(c=>{counts[c.id]=0;words[c.id]=[]});
+  for(const s of spans){counts[s.cat]++; const w=s.txt.toLowerCase(); if(!words[s.cat].includes(w)) words[s.cat].push(w);}
+  const bangs=(text.match(/!/g)||[]).length;
+  if(bangs>=3 && !spans.some(s=>s.cat==="format" && s.txt.includes("!"))) counts.format++;
+  const wordCount=(text.match(/[\p{L}\p{N}]+/gu)||[]).length;
+  const points={}; let risk=0;
+  for(const c of CATS){ if(c.positive) continue; points[c.id]=Math.min(c.cap,counts[c.id]*c.weight); risk+=points[c.id]; }
+  const bonus=Math.min(CAT.source.cap,counts.source*Math.abs(CAT.source.weight));
+  const noSource=counts.source===0 && wordCount>=12;
+  if(noSource) risk+=10;
+  const index=Math.max(0,Math.min(100,Math.round(100-risk+bonus)));
+  const signals=CATS.filter(c=>!c.positive).reduce((a,c)=>a+counts[c.id],0);
+  return {text,spans,counts,words,points,bonus,noSource,index,wordCount,signals};
+}
+const levelOf=i=>i>=75?2:i>=45?1:0;
+function verdictOf(i){
+  const l=levelOf(i);
+  if(l===2) return {label:"Сенімді көрінеді",v:"var(--good)",hex:"#1F8A4C",d:"Манипуляция белгілері аз. Соған қарамастан негізгі фактіні ресми дереккөзден тексерген артық болмайды."};
+  if(l===1) return {label:"Абай болыңыз",v:"var(--warn)",hex:"#B9730A",d:"Скриншотта бірнеше манипуляция әдісі бар. Бөліспес бұрын дереккөзін тексеріңіз."};
+  return {label:"Манипуляция белгілері көп",v:"var(--bad)",hex:"#C8343B",d:"Мәтін эмоцияға, асықтыруға немесе белгісіз дереккөзге сүйенеді. Тексерілмейінше сенуге де, таратуға да болмайды."};
+}
+const GUESS_NAMES=["Сенбеймін","Күмәнданамын","Сенемін"];
+
+/* ================= Token alignment (edited text ↔ OCR words) ================= */
+const norm=s=>s.toLowerCase().replace(/[^\p{L}\p{N}]/gu,"");
+function lev(a,b){const m=a.length,n=b.length;let p=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c;}return p[n];}
+function sim(a,b){ if(a===b) return true; if(!a||!b) return false; if(Math.abs(a.length-b.length)>2) return false;
+  return lev(a,b)<=Math.max(1,Math.floor(Math.max(a.length,b.length)*0.25)); }
+function align(A,B){ // returns map A index -> B index
+  const n=A.length,m=B.length, map=new Array(n).fill(-1);
+  if(!n||!m) return map;
+  if(n*m>600000){ for(let i=0;i<Math.min(n,m);i++) map[i]=i; return map; }
+  const W=m+1, dp=new Uint16Array((n+1)*W);
+  for(let i=n-1;i>=0;i--) for(let j=m-1;j>=0;j--)
+    dp[i*W+j]= sim(A[i],B[j]) ? dp[(i+1)*W+j+1]+1 : Math.max(dp[(i+1)*W+j],dp[i*W+j+1]);
+  let i=0,j=0;
+  while(i<n&&j<m){ if(sim(A[i],B[j])){map[i]=j;i++;j++;} else if(dp[(i+1)*W+j]>=dp[i*W+j+1]) i++; else j++; }
+  return map;
+}
+function tokenize(text){const out=[];const re=/\S+/g;let m;while((m=re.exec(text)))out.push({s:m.index,e:m.index+m[0].length,n:norm(m[0])});return out;}
+
+/* ================= State & views ================= */
+const $=id=>document.getElementById(id);
+const S={file:null,url:null,img:null,W:0,H:0,ocr:null,text:"",a:null,guess:null,boxes:[]};
+function html(s){return String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]))}
+function view(name){
+  ["v-start","v-work","v-stage","v-about"].forEach(v=>$(v).hidden=v!==name);
+  $("nav-about").setAttribute("aria-current",name==="v-about"?"page":"false");
+  $("nav-home").setAttribute("aria-current",name!=="v-about"?"page":"false");
+  window.scrollTo(0,0);
+}
+let appView="v-start";
+function route(){ if(location.hash==="#joba") view("v-about"); else view(appView); }
+window.addEventListener("hashchange",route);
+function goApp(v){ appView=v; if(location.hash==="#joba"){ location.hash=""; } else view(v); }
+
+/* ================= OCR ================= */
+let workerP=null;
+const STATUS={"loading tesseract core":"Тану модулі жүктелуде","initializing tesseract":"Тану модулі іске қосылуда","initialized tesseract":"Тану модулі дайын","loading language traineddata":"Қазақ тілінің моделі жүктелуде","loaded language traineddata":"Тіл моделі жүктелді","initializing api":"Дайындалуда","initialized api":"Дайын","recognizing text":"Мәтін танылуда"};
+function setStatus(t,p,sub){ $("work-st").textContent=t; if(p!=null) $("work-bar").style.width=Math.round(p*100)+"%"; if(sub!=null) $("work-sub").textContent=sub; }
+function getWorker(){
+  if(workerP) return workerP;
+  if(!window.Tesseract) return Promise.reject(new Error("тану кітапханасы жүктелмеді"));
+  const base=new URL("ocr/",location.href).href;
+  setStatus("Қазақ тілінің моделі жүктелуде",0.05);
+  const loadLang=code=>fetch(base+"lang/"+code+".txt").then(r=>{ if(!r.ok) throw new Error(code+" тіл моделі табылмады ("+r.status+")"); return r.text(); })
+    .then(t=>{const bin=atob(t.trim()),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return {code,data:u};});
+  const make=(langs,blob)=>Promise.race([
+    Tesseract.createWorker(langs,1,{workerPath:base+"worker.min.js",corePath:base+"core",cacheMethod:"none",workerBlobURL:blob,
+      logger:m=>{ if(m&&m.status) setStatus(STATUS[m.status]||m.status,m.progress||0); }}),
+    new Promise((_,rej)=>setTimeout(()=>rej(new Error("тану модулі 90 секундта іске қосылмады")),90000))]);
+  workerP=Promise.all([loadLang("kaz"),loadLang("eng")]).then(l=>make(l,true).catch(()=>make(l,false))).catch(e=>{workerP=null;throw e});
+  return workerP;
+}
+function loadImage(url){return new Promise((res,rej)=>{const im=new Image();im.onload=()=>res(im);im.onerror=()=>rej(new Error("суретті ашу мүмкін болмады"));im.src=url;});}
+function prepCanvas(im){ // upscale small images, invert dark-mode screenshots
+  const k=im.naturalWidth<1000?2:1;
+  const c=document.createElement("canvas"); c.width=im.naturalWidth*k; c.height=im.naturalHeight*k;
+  const x=c.getContext("2d",{willReadFrequently:true}); x.imageSmoothingQuality="high"; x.drawImage(im,0,0,c.width,c.height);
+  const d=x.getImageData(0,0,c.width,c.height), p=d.data; let sum=0,cnt=0;
+  for(let i=0;i<p.length;i+=4*37){sum+=0.299*p[i]+0.587*p[i+1]+0.114*p[i+2];cnt++;}
+  if(sum/cnt<110){ for(let i=0;i<p.length;i+=4){p[i]=255-p[i];p[i+1]=255-p[i+1];p[i+2]=255-p[i+2];} x.putImageData(d,0,0); }
+  return {canvas:c,k};
+}
+function buildOcr(data,k){
+  const tokens=[]; let text=""; let line=0;
+  for(const b of (data.blocks||[])) for(const p of (b.paragraphs||[])){
+    for(const l of (p.lines||[])){
+      const ws=(l.words||[]).filter(w=>w.text&&w.text.trim());
+      ws.forEach((w,i)=>{ if(i) text+=" "; const s=text.length; text+=w.text.trim();
+        const bb=w.bbox; tokens.push({s,e:text.length,n:norm(w.text),line,b:{x0:bb.x0/k,y0:bb.y0/k,x1:bb.x1/k,y1:bb.y1/k}}); });
+      if(ws.length){ text+="\n"; line++; }
+    }
+    text+="\n";
+  }
+  return {text:text.replace(/\n{3,}/g,"\n\n").trim(),tokens,conf:data.confidence||0};
+}
+async function handleImage(file){
+  if(!file||!/^image\//.test(file.type)){ goApp("v-work"); $("work-img").hidden=true; setStatus("Бұл сурет файлы емес",0,"PNG немесе JPG форматындағы скриншот таңдаңыз."); $("work-back").hidden=false; return; }
+  if(S.url) URL.revokeObjectURL(S.url);
+  S.file=file; S.url=URL.createObjectURL(file);
+  $("work-img").hidden=false; $("work-img").src=S.url; $("work-back").hidden=true;
+  goApp("v-work"); setStatus("Дайындалуда",0.02,"Алғашқы жүктеуде тану модулі 10 МБ шамасында жүктеледі");
+  try{
+    const im=await loadImage(S.url); S.img=im; S.W=im.naturalWidth; S.H=im.naturalHeight;
+    const {canvas,k}=prepCanvas(im);
+    const w=await getWorker();
+    setStatus("Мәтін танылуда",0.15,"Үлкен скриншотқа 10–30 секунд кетуі мүмкін");
+    const {data}=await w.recognize(canvas,{},{text:true,blocks:true});
+    const o=buildOcr(data,k);
+    if(!o.tokens.length){ setStatus("Суреттен мәтін табылмады",1,"Мәтіні анық көрінетін скриншот жүктеп көріңіз."); $("work-back").hidden=false; return; }
+    S.ocr=o; S.text=o.text; S.guess=null;
+    startGuess();
+  }catch(e){
+    setStatus("Скриншотты тану сәтсіз аяқталды",0,"Себебі: "+(e&&e.message?e.message:e)+". Бетті жаңартып, қайта көріңіз.");
+    $("work-back").hidden=false;
+  }
+}
+
+/* ================= Guess step ================= */
+function startGuess(){
+  $("shot-img").src=S.url; clearBoxes();
+  $("p-guess").hidden=false; $("p-result").hidden=true; $("legend").hidden=true; $("edit").hidden=true; $("edit").open=false;
+  goApp("v-stage");
+}
+document.querySelectorAll("[data-guess]").forEach(b=>b.addEventListener("click",()=>{S.guess=+b.dataset.guess;showResult(true);}));
+$("skip").addEventListener("click",()=>{S.guess=null;showResult(true);});
+
+/* ================= Result ================= */
+const ADVICE={
+  share:["Таратпас бұрын тоқтаңыз","«Барлығына жіберіңіз» деген хабарламаны ресми дереккөзден тексермей бөліспеңіз. Тізбекті фейк дәл осылай тарайды."],
+  phishing:["Жеке дерегіңізді бермеңіз","Карта нөмірін, SMS-кодты, құпия сөзді ешкімге айтпаңыз. Банк қызметкері оларды ешқашан сұрамайды."],
+  link:["Сілтемені ашпаңыз","Қысқартылған сілтеме шын мекенжайды жасырады. Ұйымның ресми сайтын іздеу жүйесі арқылы өзіңіз табыңыз."],
+  vague:["Дереккөздің атын іздеңіз","«Ғалымдар», «дәрігерлер», «бір танысым» дегеннің кім екені аталмаса, ол дереккөз емес."],
+  emotion:["Эмоцияны бөлек қойыңыз","Қатты қорқыныш немесе ашу сезінсеңіз, бұл тексеру керек деген белгі. Бір минут күтіп, қайта оқыңыз."],
+  urgency:["Асықпаңыз","«Шұғыл», «тек бүгін» деген шектеу ойлануға уақыт бермеу үшін қойылады."],
+  promise:["Уәдені тексеріңіз","Тегін сыйлық, кепілдік, жылдам нәтиже тым жақсы естілсе, компанияның ресми бетін және пікірлерді қараңыз."],
+  clickbait:["Тақырыпқа емес, мазмұнға қараңыз","Кликбейт көбіне мәтінде жоқ нәрсені уәде етеді. Нақты қандай факт бар екенін санаңыз."],
+  general:["Нақтылықты сұраңыз","«Бәрі», «ешкім» деген сөзден кейін «нақты кім? қанша? қашан?» деп сұраңыз."],
+  format:["Айқайға алданбаңыз","Бас әріп, «!!!», эмодзи тізбегі шындықты дәлелдемейді, тек назар аударады."]
+};
+const BASE_ADVICE=[["2–3 дереккөзден тексеріңіз","Осы ақпаратты ресми сайттан немесе бір-біріне тәуелсіз бірнеше басылымнан іздеңіз."],["Суретті кері іздеңіз","Google Lens немесе Яндекс суреттер арқылы осы сурет алғаш қашан жарияланғанын көріңіз."]];
+
+function computeBoxes(a){
+  const T=tokenize(S.text), O=S.ocr.tokens;
+  const same=S.text===S.ocr.text;
+  const map=same?T.map((_,i)=>i<O.length?i:-1):align(T.map(t=>t.n),O.map(t=>t.n));
+  const boxes=[];
+  for(const sp of a.spans){
+    const byLine={};
+    T.forEach((t,i)=>{ if(t.e>sp.s && t.s<sp.e && map[i]>=0){ const o=O[map[i]]; const L=byLine[o.line]||(byLine[o.line]={x0:1e9,y0:1e9,x1:-1,y1:-1});
+      L.x0=Math.min(L.x0,o.b.x0);L.y0=Math.min(L.y0,o.b.y0);L.x1=Math.max(L.x1,o.b.x1);L.y1=Math.max(L.y1,o.b.y1);} });
+    Object.values(byLine).forEach(b=>boxes.push({...b,cat:sp.cat,txt:sp.txt}));
+  }
+  return boxes;
+}
+function clearBoxes(){ $("shot").querySelectorAll(".box").forEach(n=>n.remove()); }
+function drawBoxes(boxes){
+  clearBoxes(); const host=$("shot"), pad=3;
+  for(const b of boxes){
+    const d=document.createElement("div"); d.className="box"; d.tabIndex=0;
+    d.style.setProperty("--c","var(--c-"+b.cat+")");
+    d.style.left=((b.x0-pad)/S.W*100)+"%"; d.style.top=((b.y0-pad)/S.H*100)+"%";
+    d.style.width=((b.x1-b.x0+2*pad)/S.W*100)+"%"; d.style.height=((b.y1-b.y0+2*pad)/S.H*100)+"%";
+    d.dataset.label=CAT[b.cat].name; d.title=CAT[b.cat].name+": "+b.txt;
+    host.appendChild(d);
+  }
+}
+function showResult(fresh){
+  const a=analyze(S.text); S.a=a; S.boxes=computeBoxes(a); drawBoxes(S.boxes);
+  const v=verdictOf(a.index), C=2*Math.PI*52;
+  $("score").textContent=a.index;
+  const ring=$("ring"); ring.style.stroke=v.v; ring.style.strokeDashoffset=C;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ring.style.strokeDashoffset=C*(1-a.index/100);}));
+  const p=$("pill"); p.textContent=v.label; p.style.setProperty("--v",v.v);
+  $("vdesc").textContent=v.d;
+  $("lowconf").hidden=!(S.ocr.conf<60);
+  // compare
+  const cmp=$("compare");
+  if(S.guess==null){ cmp.hidden=true; }
+  else{
+    const s=levelOf(a.index), diff=Math.abs(S.guess-s);
+    const head=diff===0?"Дәл таптыңыз":diff===1?"Жақын":"Бағаңыз сканерден өзгеше";
+    const col=diff===0?"var(--good)":diff===1?"var(--warn)":"var(--bad)";
+    let msg;
+    if(diff===0) msg="Сіздің жауабыңыз («"+GUESS_NAMES[S.guess]+"») сканер бағасымен сәйкес келді.";
+    else if(S.guess>s) msg="Сіз «"+GUESS_NAMES[S.guess]+"» дедіңіз, бірақ скриншотта "+a.signals+" манипуляция белгісі бар. Суреттегі белгіленген сөздерге назар аударыңыз.";
+    else msg="Сіз «"+GUESS_NAMES[S.guess]+"» дедіңіз. Сканер манипуляция белгісін аз тапты, бірақ сақтық артық емес: фактіні дереккөзден тексеріңіз.";
+    cmp.style.setProperty("--v",col);
+    cmp.innerHTML='<b>'+head+'</b><p>'+html(msg)+'</p>';
+    cmp.hidden=false;
+  }
+  // found
+  const rows=CATS.filter(c=>!c.positive&&a.counts[c.id]>0).sort((x,y)=>a.points[y.id]-a.points[x.id]);
+  $("found").innerHTML=rows.length?rows.map(c=>'<li style="--c:var(--c-'+c.id+')"><span><b>'+html(c.name)+'</b><em>'+html(a.words[c.id].slice(0,4).join(", ")||"«!!!» белгілері")+'</em></span><span class="n">×'+a.counts[c.id]+'</span></li>').join(""):'<li style="--c:var(--good)"><span><b>Манипуляция белгісі табылмады</b><em>Соған қарамастан фактіні тексеріңіз</em></span></li>';
+  const f=[];
+  if(a.noSource) f.push(['','Дереккөз, мекеме атауы немесе күні көрсетілмеген']);
+  if(a.counts.source>0) f.push(['ok','Дереккөз белгісі бар: '+a.words.source.slice(0,3).join(", ")]);
+  if(a.counts.phishing>0) f.push(['','Жеке дерек немесе ақша сұралады. Бұл алаяқтықтың ең қауіпті белгісі']);
+  $("flags").innerHTML=f.map(x=>'<div class="flag '+x[0]+'">'+html(x[1])+'</div>').join("");
+  const adv=rows.map(c=>ADVICE[c.id]).filter(Boolean).slice(0,3).concat(BASE_ADVICE);
+  $("advice").innerHTML=adv.map(x=>'<li><b>'+html(x[0])+'</b>'+html(x[1])+'</li>').join("");
+  // legend of found categories on image
+  const cats=[...new Set(S.boxes.map(b=>b.cat))];
+  $("legend").innerHTML=cats.map(id=>'<span style="--c:var(--c-'+id+')">'+html(CAT[id].name)+'</span>').join("");
+  $("legend").hidden=!cats.length;
+  $("edit").hidden=false; if(fresh) $("edit-text").value=S.text;
+  $("p-guess").hidden=true; $("p-result").hidden=false;
+  if(fresh && window.matchMedia("(max-width:860px)").matches) $("p-result").scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("edit-run").addEventListener("click",()=>{S.text=$("edit-text").value; showResult(false);});
+$("again").addEventListener("click",()=>{goApp("v-start");});
+$("work-back").addEventListener("click",()=>goApp("v-start"));
+
+/* ================= Warning card ================= */
+function wrap(ctx,text,maxW){const words=text.split(/\s+/),lines=[];let cur="";
+  for(const w of words){const t=cur?cur+" "+w:w; if(ctx.measureText(t).width>maxW&&cur){lines.push(cur);cur=w;} else cur=t;} if(cur)lines.push(cur); return lines;}
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+async function drawCard(){
+  try{await document.fonts.ready;}catch(e){}
+  const a=S.a, v=verdictOf(a.index), lvl=levelOf(a.index);
+  const W=1080,H=1350,c=document.createElement("canvas"); c.width=W;c.height=H; const x=c.getContext("2d");
+  const DISP='"Unbounded","Segoe UI",sans-serif', BODY='"IBM Plex Sans","Segoe UI",sans-serif';
+  x.fillStyle="#F5F6F8"; x.fillRect(0,0,W,H);
+  x.fillStyle=v.hex; x.fillRect(0,0,W,18);
+  // brand
+  x.fillStyle="#0F5BD8"; rr(x,70,62,56,56,15); x.fill();
+  x.strokeStyle="#fff"; x.lineWidth=3.4; x.beginPath(); x.ellipse(98,90,19,11.5,0,0,Math.PI*2); x.stroke(); x.fillStyle="#fff"; x.beginPath(); x.arc(98,90,6,0,Math.PI*2); x.fill();
+  x.fillStyle="#0E1726"; x.font="700 34px "+DISP; x.textBaseline="middle"; x.fillText("Visual Choice",142,82);
+  x.fillStyle="#5B6678"; x.font="500 24px "+BODY; x.fillText("медиа сауаттылық сканері",142,112);
+  x.textBaseline="alphabetic";
+  // headline
+  const headline=lvl===0?"Бұл ақпарат тексерілмеген":lvl===1?"Абай болыңыз: тексеру керек":"Белгілер аз, бірақ тексеріңіз";
+  x.fillStyle=v.hex; x.font="700 62px "+DISP;
+  let y=225; for(const l of wrap(x,headline,940)){x.fillText(l,70,y);y+=76;}
+  x.fillStyle="#0E1726"; x.font="500 34px "+BODY;
+  x.fillText("Сенімділік индексі: "+a.index+" / 100  ·  "+a.signals+" манипуляция белгісі",70,y+6); y+=50;
+  // screenshot crop with boxes
+  const tx=70,ty=y,tw=940,th=Math.min(500,1350-ty-430);
+  let ux0=0,uy0=0,ux1=S.W,uy1=S.H;
+  if(S.boxes.length){ux0=Math.min(...S.boxes.map(b=>b.x0));uy0=Math.min(...S.boxes.map(b=>b.y0));ux1=Math.max(...S.boxes.map(b=>b.x1));uy1=Math.max(...S.boxes.map(b=>b.y1));}
+  let sc=tw/S.W, cropH=th/sc; if(cropH>S.H){ sc=th/S.H; cropH=S.H; }
+  const cropW=Math.min(S.W,tw/sc);
+  let cy=(uy0+uy1)/2-cropH/2; cy=Math.max(0,Math.min(S.H-cropH,cy));
+  let cx=(ux0+ux1)/2-cropW/2; cx=Math.max(0,Math.min(S.W-cropW,cx));
+  const dw=cropW*sc, dx=tx+(tw-dw)/2;
+  x.save(); rr(x,tx,ty,tw,th,22); x.fillStyle="#E4E7EC"; x.fill(); x.clip();
+  x.drawImage(S.img,cx,cy,cropW,cropH,dx,ty,dw,cropH*sc);
+  for(const b of S.boxes){ const bx=dx+(b.x0-cx)*sc-4, by=ty+(b.y0-cy)*sc-4, bw=(b.x1-b.x0)*sc+8, bh=(b.y1-b.y0)*sc+8;
+    x.fillStyle=CARD_COLORS[b.cat]+"2E"; x.strokeStyle=CARD_COLORS[b.cat]; x.lineWidth=5; rr(x,bx,by,bw,bh,6); x.fill(); x.stroke(); }
+  if(lvl===0){ x.translate(tx+tw/2,ty+th/2); x.rotate(-0.18); x.font="700 70px "+DISP; const st="ТЕКСЕРІЛМЕГЕН", sw=x.measureText(st).width+60;
+    x.fillStyle="rgba(255,255,255,.78)"; rr(x,-sw/2,-56,sw,112,16); x.fill(); x.strokeStyle="#C8343B"; x.lineWidth=7; x.stroke();
+    x.fillStyle="#C8343B"; x.textAlign="center"; x.textBaseline="middle"; x.fillText(st,0,4); }
+  x.restore(); x.textAlign="left"; x.textBaseline="alphabetic";
+  x.strokeStyle="#DDE2E9"; x.lineWidth=2; rr(x,tx,ty,tw,th,22); x.stroke();
+  y=ty+th+70;
+  // found list
+  const rows=CATS.filter(c=>!c.positive&&a.counts[c.id]>0).sort((p,q)=>a.points[q.id]-a.points[p.id]).slice(0,3);
+  if(rows.length){ x.fillStyle="#5B6678"; x.font="600 26px "+BODY; x.fillText("ТАБЫЛҒАН ӘДІСТЕР",70,y); y+=50;
+    for(const c of rows){ x.fillStyle=CARD_COLORS[c.id]; rr(x,70,y-26,26,26,6); x.fill();
+      x.fillStyle="#0E1726"; x.font="600 34px "+BODY; x.fillText(c.name,112,y-2);
+      const ex=a.words[c.id].slice(0,2).map(w=>"«"+w+"»").join(", ");
+      if(ex){ const nw=x.measureText(c.name).width; x.fillStyle="#5B6678"; x.font="400 28px "+BODY; let s=ex; while(x.measureText(s).width>940-nw-60&&s.length>4) s=s.slice(0,-2); if(s!==ex) s+="…"; x.fillText(s,112+nw+18,y-2); }
+      y+=54; } }
+  // footer
+  x.fillStyle="#0E1726"; x.fillRect(0,H-150,W,150);
+  x.fillStyle="#FFFFFF"; x.font="600 34px "+BODY; x.fillText("Бөліспес бұрын ресми дереккөзден тексеріңіз",70,H-86);
+  x.fillStyle="#9AA6B8"; x.font="400 24px "+BODY; x.fillText("Visual Choice · оқушының медиа сауаттылық жобасы · "+new Date().toLocaleDateString("kk-KZ"),70,H-44);
+  return new Promise(res=>c.toBlob(res,"image/png"));
+}
+let cardBlob=null, cardURL=null;
+$("make-card").addEventListener("click",async()=>{
+  const btn=$("make-card"); btn.disabled=true; btn.textContent="Карточка жасалуда...";
+  try{
+    cardBlob=await drawCard(); if(cardURL) URL.revokeObjectURL(cardURL); cardURL=URL.createObjectURL(cardBlob);
+    $("card-img").src=cardURL;
+    const f=new File([cardBlob],"visual-choice-eskertu.png",{type:"image/png"});
+    let canShare=false; try{canShare=!!(navigator.canShare&&navigator.canShare({files:[f]}));}catch(e){}
+    $("c-share").hidden=!canShare;
+    $("modal").hidden=false; $("modal-x").focus();
+  }finally{ btn.disabled=false; btn.textContent="Отбасы чатына ескерту карточкасын жасау"; }
+});
+$("c-share").addEventListener("click",async()=>{
+  try{ await navigator.share({files:[new File([cardBlob],"visual-choice-eskertu.png",{type:"image/png"})],text:"Бұл хабарламаны бөліспес бұрын тексеріңіз."}); }
+  catch(e){ $("c-hint").textContent="Бөлісу ашылмады. «Суретті көшіру» немесе «Суретті сақтау» батырмасын қолданыңыз."; }
+});
+$("c-copy").addEventListener("click",async()=>{
+  const b=$("c-copy");
+  try{ await navigator.clipboard.write([new ClipboardItem({"image/png":cardBlob})]); b.textContent="Көшірілді"; }
+  catch(e){ b.textContent="Көшіру мүмкін болмады"; $("c-hint").textContent="Бұл браузер суретті көшіруге рұқсат бермеді. Суретті басып тұрып немесе тінтуірдің оң жағымен сақтаңыз."; }
+  setTimeout(()=>b.textContent="Суретті көшіру",3000);
+});
+// file save: inside Claude the platform's downloads capability, on ordinary hosting a normal download link
+let dl=null;
+try{ if(window.claude&&typeof window.claude.use==="function") window.claude.use("downloads").then(n=>{dl=n;}).catch(()=>{}); }catch(e){}
+$("c-save").addEventListener("click",async()=>{
+  const b=$("c-save"), name="visual-choice-eskertu.png";
+  try{
+    if(dl){ await dl.save({filename:name,data:cardBlob}); b.textContent="Сақталды"; }
+    else{ const a=document.createElement("a"); a.href=cardURL; a.download=name; document.body.appendChild(a); a.click(); a.remove(); }
+  }catch(e){ $("c-hint").textContent="Сақтау орындалмады. Суретті басып тұрып немесе тінтуірдің оң жағымен сақтаңыз."; }
+  setTimeout(()=>b.textContent="Суретті сақтау",3000);
+});
+function closeModal(){ $("modal").hidden=true; $("make-card").focus(); }
+$("modal-x").addEventListener("click",closeModal);
+$("modal").addEventListener("click",e=>{ if(e.target===$("modal")) closeModal(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("modal").hidden) closeModal(); });
+
+/* ================= Upload wiring ================= */
+$("file").addEventListener("change",e=>{handleImage(e.target.files[0]);e.target.value="";});
+const drop=$("drop");
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>{const f=e.dataTransfer&&e.dataTransfer.files[0]; if(f) handleImage(f);});
+document.addEventListener("paste",e=>{
+  if(e.target&&e.target.tagName==="TEXTAREA") return;
+  const items=e.clipboardData?e.clipboardData.items:[];
+  for(const it of items){ if(it.kind==="file"&&it.type.startsWith("image/")){ e.preventDefault(); handleImage(it.getAsFile()); return; } }
+});
+
+/* ================= Demo screenshot (drawn, clearly an example) ================= */
+$("demo").addEventListener("click",()=>{
+  const W=720,H=860,c=document.createElement("canvas"); c.width=W;c.height=H; const x=c.getContext("2d");
+  x.fillStyle="#ECE5DD"; x.fillRect(0,0,W,H);
+  x.fillStyle="#075E54"; x.fillRect(0,0,W,96);
+  x.fillStyle="#fff"; x.font="600 30px Arial"; x.fillText("Отбасы тобы (мысал)",90,58);
+  x.fillStyle="#cfd8dc"; x.beginPath(); x.arc(48,48,26,0,Math.PI*2); x.fill();
+  const msg="ШҰҒЫЛ!!! Барлығыңызға жіберіңіз! Ертең облыстағы судың бәрі улы болады, дәрігерлердің айтуынша кранды мүлдем ашпаңыз. Билік бұны жасырып отыр, теледидар көрсетпейді. Бір танысым әкімдікте істейді, сол айтты. Өшіріп тастамай тұрғанда тез арада туыстарыңызға таратыңыз!!!";
+  x.font="30px Arial"; const lines=wrap(x,msg,560);
+  const bh=lines.length*42+70; x.fillStyle="#fff"; rr(x,40,140,620,bh,16); x.fill();
+  x.fillStyle="#1f7a4d"; x.font="600 24px Arial"; x.fillText("Апай",70,180);
+  x.fillStyle="#111"; x.font="30px Arial"; lines.forEach((l,i)=>x.fillText(l,70,222+i*42));
+  x.fillStyle="#8a8a8a"; x.font="22px Arial"; x.fillText("09:41",590,140+bh-16);
+  x.fillStyle="#DCF8C6"; rr(x,330,160+bh,330,70,16); x.fill(); x.fillStyle="#111"; x.font="28px Arial"; x.fillText("Рас па бұл?",355,205+bh);
+  c.toBlob(b=>handleImage(new File([b],"mysal.png",{type:"image/png"})),"image/png");
+});
+
+route();
+})();
+</script>
+</body>
+</html>
