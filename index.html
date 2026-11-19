@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Visual Choice</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0F5BD8">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -166,6 +170,96 @@ details.edit .row{display:flex;gap:10px;align-items:center;margin-top:8px;flex-w
 .questions li{counter-increment:q;display:grid;grid-template-columns:38px 1fr;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-weight:500}
 .questions li::before{content:counter(q);width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:600 .9rem var(--f-mono)}
 .closing{font:700 1.15rem/1.4 var(--f-display);max-width:40ch}
+/* games */
+.game{padding:8px 0 20px}
+.g-hub{display:grid;gap:28px;max-width:920px}
+.g-hub h1,.g-end h1{font-size:clamp(2rem,5vw,3rem);line-height:1.05}
+.g-hub .lead{margin:14px 0 0;color:var(--muted);font-size:1.05rem;max-width:62ch}
+.gcards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:700px){.gcards{grid-template-columns:1fr}}
+.gcard{appearance:none;text-align:left;cursor:pointer;background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:18px;padding:22px;display:grid;gap:10px;align-content:start;transition:border-color .15s, transform .15s}
+.gcard:hover{border-color:var(--accent);transform:translateY(-2px)}
+.gcard h2{font-size:1.35rem}
+.gcard p{margin:0;color:var(--muted);font-size:.95rem}
+.gcard .best{font:600 .85rem var(--f-mono);color:var(--accent)}
+.cert-panel{grid-template-columns:minmax(0,1fr) minmax(260px,360px);align-items:end}
+@media (max-width:700px){.cert-panel{grid-template-columns:1fr}}
+.cert-panel p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
+.cert-form{display:grid;gap:8px}
+.cert-form label{font-size:.84rem;color:var(--muted);font-weight:500}
+.cert-form input{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:var(--paper);color:var(--ink);font:400 1rem var(--f-body)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.g-top{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:16px}
+.g-top .meta{font:600 .88rem var(--f-mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.trust{display:inline-flex;align-items:center;gap:8px;margin-left:auto}
+.tbar{width:120px;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.tbar i{display:block;height:100%;width:50%;background:var(--good);transition:width .4s, background .3s}
+.g-stage{display:grid;grid-template-columns:minmax(0,440px) minmax(280px,1fr);gap:28px;align-items:start}
+@media (max-width:820px){.g-stage{grid-template-columns:1fr}}
+.g-side{position:sticky;top:16px}
+@media (max-width:820px){.g-side{position:static}}
+.g-side p{margin:0}
+
+/* phone mockups: fixed light look, like a real screenshot */
+.phone{width:100%;max-width:440px;border:8px solid #1A2130;border-radius:30px;background:#fff;color:#111;overflow:hidden;box-shadow:0 18px 40px -22px rgba(10,20,40,.45);font-family:Arial,"Segoe UI",sans-serif;color-scheme:light}
+.ph-bar{display:flex;align-items:center;gap:10px;padding:12px 14px;color:#fff}
+.ph-bar .ava,.chat-head .ava{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;flex:none}
+.ph-bar small,.chat-head small{display:block;font-size:12px;opacity:.85}
+.ph-body{padding:16px 14px 20px;line-height:1.55;font-size:16px}
+.bubble{background:#fff;border-radius:4px 14px 14px 14px;padding:10px 12px 18px;position:relative;max-width:92%;box-shadow:0 1px 1px rgba(0,0,0,.12)}
+.bubble .from{font-weight:700;font-size:13px;margin-bottom:3px}
+.bubble .tm{position:absolute;right:10px;bottom:4px;font-size:11px;color:#888}
+.bubble.me{background:#DCF8C6;border-radius:14px 4px 14px 14px;margin-left:auto}
+.wa .ph-bar{background:#075E54}.wa .ph-body{background:#ECE5DD}
+.ig .ph-bar{background:#fff;color:#111;border-bottom:1px solid #eee}
+.ig .ph-bar small{color:#777;opacity:1}
+.ig .pic{height:170px;background:linear-gradient(135deg,#F7C9A9,#F38B8B);display:grid;place-items:center;color:#fff;font:700 44px Arial;letter-spacing:.02em}
+.tg .ph-bar{background:#3A86C8}.tg .ph-body{background:#DCE8F2}
+.tg .post{background:#fff;border-radius:12px;padding:12px 14px 20px;position:relative}
+.tg .views{position:absolute;right:12px;bottom:5px;font-size:11px;color:#8a99a8}
+.sms .ph-bar{background:#F2F2F7;color:#111;border-bottom:1px solid #e3e3e8;justify-content:center;flex-direction:column;gap:2px}
+.sms .ph-bar small{color:#777;opacity:1}
+.sms .bubble{background:#E9E9EB;border-radius:18px;box-shadow:none}
+.nw .ph-bar{background:#1F3A5F}
+.nw h4{margin:0 0 8px;font:700 18px/1.3 Arial}
+.nw .date{font-size:12px;color:#777;margin-bottom:8px}
+.w{border-radius:4px;padding:0 1px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.w:hover{background:rgba(15,91,216,.10)}
+.w.sel{background:rgba(15,91,216,.20);box-shadow:inset 0 -2px 0 #0F5BD8}
+.w.hit{background:color-mix(in srgb,var(--c) 26%,transparent);box-shadow:0 0 0 2px var(--c)}
+.w.miss{box-shadow:0 0 0 2px var(--c);background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 18%,transparent) 0 4px,transparent 4px 8px)}
+.w.false{text-decoration:line-through;text-decoration-thickness:2px;background:rgba(120,120,120,.18)}
+.w.src{box-shadow:0 0 0 2px #2F9E44;background:rgba(47,158,68,.14)}
+.locked .w{cursor:default}
+.hres{display:grid;gap:10px}
+.hres .sum{font-weight:600}
+.hres ul{list-style:none;margin:0;padding:0;display:grid;gap:8px;max-height:46vh;overflow:auto}
+.hres li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:.9rem;align-items:start}
+.hres li i{font-style:normal;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font:700 .72rem var(--f-mono);color:#fff;background:var(--c);margin-top:1px}
+.hres li.missed i{background:transparent;color:var(--c);border:2px solid var(--c)}
+.hres li em{font-style:normal;color:var(--muted);display:block;font-size:.84rem}
+.hkey{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.78rem;color:var(--muted)}
+.hkey span{display:inline-flex;align-items:center;gap:6px}
+.hkey b{display:inline-block;width:14px;height:12px;border-radius:3px}
+
+/* family chat */
+.chat .chat-head{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#075E54;color:#fff}
+.chat-body{background:#ECE5DD;padding:14px;display:grid;gap:10px;align-content:start;height:min(62vh,560px);overflow-y:auto;font-size:15px;line-height:1.5}
+.sysmsg{justify-self:center;max-width:94%;background:#FFF5C4;color:#4a4020;border-radius:10px;padding:8px 12px;font-size:13px;text-align:center;box-shadow:0 1px 1px rgba(0,0,0,.08)}
+.sysmsg.bad{background:#FDE1E1;color:#7a1f1f}.sysmsg.good{background:#DFF3E4;color:#1d5b31}
+.typing{font-size:13px;color:#667;font-style:italic}
+.choices4{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.choices4 button{appearance:none;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:12px;padding:12px;font-weight:600;cursor:pointer;text-align:left;display:grid;gap:2px}
+.choices4 button small{font-weight:400;color:var(--muted);font-size:.8rem}
+.choices4 button:hover{border-color:var(--accent)}
+.verdict-tag{display:inline-flex;align-items:center;gap:8px;font-weight:700;padding:6px 12px;border-radius:999px;width:max-content;background:color-mix(in srgb,var(--v) 14%,transparent);color:var(--v)}
+.lesson{margin:0;font-size:.93rem}
+.kind{font-size:.8rem;color:var(--muted);font-weight:600}
+
+.g-end{display:grid;gap:14px;max-width:640px;padding:30px 0}
+.g-end p{margin:0;color:var(--muted);font-size:1.02rem}
+.e-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px}
+.install{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font-weight:600;font-size:.84rem;cursor:pointer}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
@@ -180,7 +274,7 @@ details.edit .row{display:flex;gap:10px;align-items:center;margin-top:8px;flex-w
       </svg>
       <b>Visual Choice</b>
     </a>
-    <nav><a href="#" id="nav-home">Тексеру</a><a href="#joba" id="nav-about">Жоба туралы</a></nav>
+    <nav><a href="#" id="nav-home">Тексеру</a><a href="#oiyn" id="nav-game">Детектив алаңы</a><a href="#joba" id="nav-about">Жоба туралы</a></nav>
   </div>
 </header>
 
@@ -198,6 +292,8 @@ details.edit .row{display:flex;gap:10px;align-items:center;margin-top:8px;flex-w
     <div class="below">
       <button class="linkbtn" id="demo" type="button">Мысал скриншотпен көру</button>
       <span class="dot-ok">Сурет ешқайда жіберілмейді, талдау құрылғыңызда жүреді</span>
+      <span class="dot-ok" id="offline-ok" hidden>Интернетсіз де жұмыс істейді</span>
+      <button class="install" id="install" type="button" hidden>Телефонға қосымша ретінде орнату</button>
     </div>
   </section>
 
@@ -326,6 +422,85 @@ details.edit .row{display:flex;gap:10px;align-items:center;margin-top:8px;flex-w
 
     <p class="closing">Сканер шешім шығармайды, тек манипуляция белгілерін көрсетеді. Соңғы таңдау сіздікі.</p>
     <a class="btn" href="#" style="justify-self:start;text-decoration:none">Скриншот тексеру</a>
+  </section>
+  <!-- games -->
+  <section class="game" id="v-game" hidden>
+    <div id="g-hub" class="g-hub">
+      <div>
+        <h1>Детектив алаңы</h1>
+        <p class="lead">Екі ойын арқылы өзіңізді сынап көріңіз. Біріншісі манипуляцияны табуға, екіншісі дұрыс шешім қабылдауға үйретеді. Екеуін де ойнасаңыз, «Медиа детектив» сертификатын аласыз.</p>
+      </div>
+      <div class="gcards">
+        <button class="gcard" id="open-hunt" type="button">
+          <span class="kicker">1-ойын · 6 скриншот</span>
+          <h2>Фейк аңшысы</h2>
+          <p>Скриншоттағы манипуляциялық сөздерді өзіңіз басып табасыз, сосын сканер өз нұсқасын ашады. Сканерден озып көріңіз.</p>
+          <span class="best" id="best-hunt">Әлі ойналмаған</span>
+        </button>
+        <button class="gcard" id="open-chat" type="button">
+          <span class="kicker">2-ойын · 8 хабарлама</span>
+          <h2>Отбасы чаты</h2>
+          <p>Туыстарыңыздан хабарлама келеді. Бөлісесіз бе, тексересіз бе, әлде түсіндіресіз бе? Әр шешімнің салдары бар.</p>
+          <span class="best" id="best-chat">Әлі ойналмаған</span>
+        </button>
+      </div>
+      <div class="panel cert-panel">
+        <div><span class="kicker">Медиа детектив сертификаты</span><p id="cert-note">Кемінде бір ойынды аяқтасаңыз, сертификат ашылады.</p></div>
+        <div class="cert-form">
+          <label for="cert-name">Аты-жөніңіз</label>
+          <input id="cert-name" type="text" maxlength="40" placeholder="Мысалы: Айбар Серікұлы" autocomplete="name">
+          <button class="btn" id="cert-make" type="button" disabled>Сертификат алу</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- game 1 -->
+    <div id="g-hunt" hidden>
+      <div class="g-top">
+        <button class="linkbtn" data-hub type="button">← Ойындар</button>
+        <span class="meta" id="h-prog">1 / 6</span>
+        <span class="meta" id="h-score">0 ұпай</span>
+      </div>
+      <div class="g-stage">
+        <div class="phone" id="h-phone"></div>
+        <div class="panel g-side">
+          <span class="kicker">Фейк аңшысы</span>
+          <p id="h-task">Манипуляция деп ойлаған сөздерді басып белгілеңіз. Белгі жоқ деп ойласаңыз, ештеңе белгілемей «Тексеру» батырмасын басыңыз.</p>
+          <div id="h-result" hidden></div>
+          <button class="btn" id="h-check" type="button">Тексеру</button>
+          <button class="btn" id="h-next" type="button" hidden>Келесі скриншот</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- game 2 -->
+    <div id="g-chat" hidden>
+      <div class="g-top">
+        <button class="linkbtn" data-hub type="button">← Ойындар</button>
+        <span class="meta" id="c-prog">1 / 8</span>
+        <span class="trust"><span class="meta">Отбасы сенімі</span><span class="tbar"><i id="c-trust"></i></span><span class="meta" id="c-trust-n">50</span></span>
+      </div>
+      <div class="g-stage">
+        <div class="phone chat">
+          <div class="chat-head"><span class="ava" style="background:#5B8C5A">Б</span><span><b>Біздің әулет</b><small>Апай, Ағай, Әпке, Ата, Інім, Сіз</small></span></div>
+          <div class="chat-body" id="c-body" aria-live="polite"></div>
+        </div>
+        <div class="panel g-side" id="c-side"></div>
+      </div>
+    </div>
+
+    <!-- end -->
+    <div id="g-end" class="g-end" hidden>
+      <span class="kicker" id="e-game"></span>
+      <h1 id="e-level"></h1>
+      <div class="score"><span id="e-score"></span><small id="e-max"></small></div>
+      <p id="e-desc"></p>
+      <div class="e-actions">
+        <button class="btn" id="e-again" type="button">Қайта ойнау</button>
+        <button class="btn ghost" id="e-other" type="button"></button>
+        <button class="linkbtn" data-hub type="button">Сертификат алу және ойындарға оралу</button>
+      </div>
+    </div>
   </section>
 </main>
 
@@ -460,15 +635,16 @@ const $=id=>document.getElementById(id);
 const S={file:null,url:null,img:null,W:0,H:0,ocr:null,text:"",a:null,guess:null,boxes:[]};
 function html(s){return String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]))}
 function view(name){
-  ["v-start","v-work","v-stage","v-about"].forEach(v=>$(v).hidden=v!==name);
+  ["v-start","v-work","v-stage","v-about","v-game"].forEach(v=>$(v).hidden=v!==name);
   $("nav-about").setAttribute("aria-current",name==="v-about"?"page":"false");
-  $("nav-home").setAttribute("aria-current",name!=="v-about"?"page":"false");
+  $("nav-game").setAttribute("aria-current",name==="v-game"?"page":"false");
+  $("nav-home").setAttribute("aria-current",name!=="v-about"&&name!=="v-game"?"page":"false");
   window.scrollTo(0,0);
 }
 let appView="v-start";
-function route(){ if(location.hash==="#joba") view("v-about"); else view(appView); }
+function route(){ if(location.hash==="#joba") view("v-about"); else if(location.hash==="#oiyn"){ view("v-game"); if(typeof renderHub==="function") renderHub(); } else view(appView); }
 window.addEventListener("hashchange",route);
-function goApp(v){ appView=v; if(location.hash==="#joba"){ location.hash=""; } else view(v); }
+function goApp(v){ appView=v; if(location.hash==="#joba"||location.hash==="#oiyn"){ location.hash=""; } else view(v); }
 
 /* ================= OCR ================= */
 let workerP=null;
@@ -684,25 +860,30 @@ async function drawCard(){
   x.fillStyle="#9AA6B8"; x.font="400 24px "+BODY; x.fillText("Visual Choice · оқушының медиа сауаттылық жобасы · "+new Date().toLocaleDateString("kk-KZ"),70,H-44);
   return new Promise(res=>c.toBlob(res,"image/png"));
 }
-let cardBlob=null, cardURL=null;
+const M={blob:null,url:null,name:"",text:"",ret:null};
+function openImage(blob,title,name,text,hint,ret){
+  if(M.url) URL.revokeObjectURL(M.url);
+  M.blob=blob; M.url=URL.createObjectURL(blob); M.name=name; M.text=text; M.ret=ret||null;
+  $("modal-title").textContent=title; $("card-img").src=M.url; $("card-img").alt=title; $("c-hint").textContent=hint;
+  const f=new File([blob],name,{type:"image/png"});
+  let canShare=false; try{canShare=!!(navigator.canShare&&navigator.canShare({files:[f]}));}catch(e){}
+  $("c-share").hidden=!canShare;
+  $("modal").hidden=false; $("modal-x").focus();
+}
 $("make-card").addEventListener("click",async()=>{
   const btn=$("make-card"); btn.disabled=true; btn.textContent="Карточка жасалуда...";
   try{
-    cardBlob=await drawCard(); if(cardURL) URL.revokeObjectURL(cardURL); cardURL=URL.createObjectURL(cardBlob);
-    $("card-img").src=cardURL;
-    const f=new File([cardBlob],"visual-choice-eskertu.png",{type:"image/png"});
-    let canShare=false; try{canShare=!!(navigator.canShare&&navigator.canShare({files:[f]}));}catch(e){}
-    $("c-share").hidden=!canShare;
-    $("modal").hidden=false; $("modal-x").focus();
+    const blob=await drawCard();
+    openImage(blob,"Ескерту карточкасы","visual-choice-eskertu.png","Бұл хабарламаны бөліспес бұрын тексеріңіз.","Көшірген суретті WhatsApp чатына қойыңыз. Батырма істемесе, суретті басып тұрып немесе тінтуірдің оң жағымен сақтаңыз.",btn);
   }finally{ btn.disabled=false; btn.textContent="Отбасы чатына ескерту карточкасын жасау"; }
 });
 $("c-share").addEventListener("click",async()=>{
-  try{ await navigator.share({files:[new File([cardBlob],"visual-choice-eskertu.png",{type:"image/png"})],text:"Бұл хабарламаны бөліспес бұрын тексеріңіз."}); }
+  try{ await navigator.share({files:[new File([M.blob],M.name,{type:"image/png"})],text:M.text}); }
   catch(e){ $("c-hint").textContent="Бөлісу ашылмады. «Суретті көшіру» немесе «Суретті сақтау» батырмасын қолданыңыз."; }
 });
 $("c-copy").addEventListener("click",async()=>{
   const b=$("c-copy");
-  try{ await navigator.clipboard.write([new ClipboardItem({"image/png":cardBlob})]); b.textContent="Көшірілді"; }
+  try{ await navigator.clipboard.write([new ClipboardItem({"image/png":M.blob})]); b.textContent="Көшірілді"; }
   catch(e){ b.textContent="Көшіру мүмкін болмады"; $("c-hint").textContent="Бұл браузер суретті көшіруге рұқсат бермеді. Суретті басып тұрып немесе тінтуірдің оң жағымен сақтаңыз."; }
   setTimeout(()=>b.textContent="Суретті көшіру",3000);
 });
@@ -710,17 +891,242 @@ $("c-copy").addEventListener("click",async()=>{
 let dl=null;
 try{ if(window.claude&&typeof window.claude.use==="function") window.claude.use("downloads").then(n=>{dl=n;}).catch(()=>{}); }catch(e){}
 $("c-save").addEventListener("click",async()=>{
-  const b=$("c-save"), name="visual-choice-eskertu.png";
+  const b=$("c-save");
   try{
-    if(dl){ await dl.save({filename:name,data:cardBlob}); b.textContent="Сақталды"; }
-    else{ const a=document.createElement("a"); a.href=cardURL; a.download=name; document.body.appendChild(a); a.click(); a.remove(); }
+    if(dl){ await dl.save({filename:M.name,data:M.blob}); b.textContent="Сақталды"; }
+    else{ const a=document.createElement("a"); a.href=M.url; a.download=M.name; document.body.appendChild(a); a.click(); a.remove(); }
   }catch(e){ $("c-hint").textContent="Сақтау орындалмады. Суретті басып тұрып немесе тінтуірдің оң жағымен сақтаңыз."; }
   setTimeout(()=>b.textContent="Суретті сақтау",3000);
 });
-function closeModal(){ $("modal").hidden=true; $("make-card").focus(); }
+function closeModal(){ $("modal").hidden=true; if(M.ret) M.ret.focus(); }
+
 $("modal-x").addEventListener("click",closeModal);
 $("modal").addEventListener("click",e=>{ if(e.target===$("modal")) closeModal(); });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("modal").hidden) closeModal(); });
+
+/* ================= Games ================= */
+const GS={hunt:null,chat:null};
+try{ const g=JSON.parse(localStorage.getItem("vc-games")||"{}"); if(g.hunt) GS.hunt=g.hunt; if(g.chat) GS.chat=g.chat; }catch(e){}
+function gsave(){ try{ localStorage.setItem("vc-games",JSON.stringify(GS)); }catch(e){} }
+const LEVELS=[
+  [85,"Медиа детектив","Манипуляцияны бірден танисыз және дұрыс шешім қабылдайсыз. Енді басқаларға үйретуге болады."],
+  [65,"Сақ оқырман","Белгілердің көбін байқайсыз. Аздаған тәжірибе қалды."],
+  [40,"Жас тергеуші","Негізгі белгілерді білесіз, бірақ кейбірін өткізіп аласыз. Қайта ойнап көріңіз."],
+  [0,"Бастаушы","Бұл бастамасы ғана. «Жоба туралы» бетін оқып, қайта ойнап көріңіз."]];
+const levelFor=p=>LEVELS.find(l=>p>=l[0]);
+const pct=r=>r&&r.max?Math.round(r.score/r.max*100):0;
+function gpart(id){ ["g-hub","g-hunt","g-chat","g-end"].forEach(x=>$(x).hidden=x!==id); window.scrollTo(0,0); }
+function renderHub(){
+  $("best-hunt").textContent=GS.hunt?("Нәтижеңіз: "+GS.hunt.score+" / "+GS.hunt.max+" · "+levelFor(pct(GS.hunt))[1]):"Әлі ойналмаған";
+  $("best-chat").textContent=GS.chat?("Нәтижеңіз: "+GS.chat.score+" / "+GS.chat.max+" · "+levelFor(pct(GS.chat))[1]):"Әлі ойналмаған";
+  const any=GS.hunt||GS.chat;
+  $("cert-make").disabled=!any;
+  $("cert-note").textContent=!any?"Кемінде бір ойынды аяқтасаңыз, сертификат ашылады.":(GS.hunt&&GS.chat?"Екі ойын да аяқталды. Аты-жөніңізді жазып, сертификат алыңыз.":"Бір ойын аяқталды. Екіншісін де ойнасаңыз, сертификат толық болады.");
+  gpart("g-hub");
+}
+document.querySelectorAll("[data-hub]").forEach(b=>b.addEventListener("click",renderHub));
+
+/* ---- shared end screen ---- */
+let lastGame=null;
+function endGame(id,score,max){
+  const prev=GS[id];
+  if(!prev||score/max>=prev.score/prev.max) GS[id]={score,max}; gsave();
+  lastGame=id;
+  const p=Math.round(score/max*100), L=levelFor(p);
+  $("e-game").textContent=id==="hunt"?"Фейк аңшысы · аяқталды":"Отбасы чаты · аяқталды";
+  $("e-level").textContent=L[1];
+  $("e-score").textContent=score; $("e-max").textContent=" / "+max+" ұпай · "+p+"%";
+  $("e-desc").textContent=L[2];
+  $("e-other").textContent=id==="hunt"?"«Отбасы чаты» ойынына өту":"«Фейк аңшысы» ойынына өту";
+  gpart("g-end");
+}
+$("e-again").addEventListener("click",()=>{ lastGame==="hunt"?startHunt():startChat(); });
+$("e-other").addEventListener("click",()=>{ lastGame==="hunt"?startChat():startHunt(); });
+
+/* ---- game 1: fake hunter ---- */
+const HUNT=[
+  {type:"wa",who:"Апай",title:"Отбасы тобы",text:"ШҰҒЫЛ!!! Ертең облыста интернет мүлдем өшеді, бір танысым айтты. Тез арада барлық туыстарыңызға жіберіңіз!"},
+  {type:"ig",who:"sulu_dene_shop",title:"Жарнама",text:"СЕНБЕЙСІЗ! Бір аптада 7 кг арықтаудың құпиясы. 100% кепілдік, тек бүгін ғана тегін жеткізу. Профильдегі сілтемеге өтіңіз 👉"},
+  {type:"tg",who:"Таңғы жаңалықтар 24",title:"арна · 12 400 жазылушы",text:"Ғалымдар дәлелдеді: телефонды түнде зарядтау өте қауіпті! Билік бұны жасырып отыр, теледидар көрсетпейді. Бөлісіңіз, жақындарыңыз білсін."},
+  {type:"nw",who:"Аудандық білім бөлімі",title:"ресми сайт",head:"Ата-аналар жиналысы туралы",text:"Аудандық білім бөлімінің баспасөз қызметі 25 қарашада мектептерде ата-аналар жиналысы өтетінін хабарлады. Толық кесте бөлімнің ресми сайтында жарияланды."},
+  {type:"sms",who:"Bank-Service",title:"SMS хабарлама",text:"Құрметті клиент! Картаңыз бұғатталды. Бұғаттан шығару үшін карта нөміріңізді және SMS-кодты жауап ретінде жазыңыз. Уақыт аз!"},
+  {type:"wa",who:"Нағашы ата",title:"Отбасы тобы",text:"Дәрігерлердің айтуынша, таңертең сода ішсеңіз қысым мүлдем жоғалады. Ешкім айтпайды бұны! Барлығына жіберіңдер"}
+];
+const H={i:0,score:0,max:0,tokens:[],targets:[],sources:[],sel:new Set(),locked:false};
+function phoneHTML(r,inner){
+  const ava=(r.who[0]||"?").toUpperCase();
+  if(r.type==="wa") return '<div class="wa"><div class="ph-bar"><span class="ava" style="background:#7A9E7E">'+html(ava)+'</span><span><b>'+html(r.title)+'</b><small>мысал скриншот</small></span></div><div class="ph-body"><div class="bubble"><div class="from" style="color:#1f7a4d">'+html(r.who)+'</div><div id="h-text">'+inner+'</div><span class="tm">09:41</span></div></div></div>';
+  if(r.type==="ig") return '<div class="ig"><div class="ph-bar"><span class="ava" style="background:#E1306C">'+html(ava)+'</span><span><b>'+html(r.who)+'</b><small>'+html(r.title)+'</small></span></div><div class="pic">−7 КГ</div><div class="ph-body"><b>'+html(r.who)+'</b> <span id="h-text">'+inner+'</span></div></div>';
+  if(r.type==="tg") return '<div class="tg"><div class="ph-bar"><span class="ava" style="background:#F08A24">'+html(ava)+'</span><span><b>'+html(r.who)+'</b><small>'+html(r.title)+'</small></span></div><div class="ph-body"><div class="post"><div id="h-text">'+inner+'</div><span class="views">8,1K көрілім · 07:15</span></div></div></div>';
+  if(r.type==="sms") return '<div class="sms"><div class="ph-bar"><span class="ava" style="background:#8E8E93">'+html(ava)+'</span><b>'+html(r.who)+'</b><small>'+html(r.title)+'</small></div><div class="ph-body"><div class="bubble"><div id="h-text">'+inner+'</div></div></div></div>';
+  return '<div class="nw"><div class="ph-bar"><span class="ava" style="background:#3B6EA8">'+html(ava)+'</span><span><b>'+html(r.who)+'</b><small>'+html(r.title)+'</small></span></div><div class="ph-body"><h4>'+html(r.head||"")+'</h4><div class="date">мысал жаңалық</div><div id="h-text">'+inner+'</div></div></div>';
+}
+function startHunt(){ H.i=0; H.score=0; H.max=0; gpart("g-hunt"); huntRound(); }
+function huntRound(){
+  const r=HUNT[H.i];
+  H.tokens=tokenize(r.text); H.sel=new Set(); H.locked=false;
+  const a=analyze(r.text);
+  const groups=a.spans.map(sp=>({sp,toks:H.tokens.map((t,i)=>t.e>sp.s&&t.s<sp.e?i:-1).filter(i=>i>=0)}));
+  H.targets=groups.filter(g=>g.sp.cat!=="source"); H.sources=groups.filter(g=>g.sp.cat==="source");
+  let out="",pos=0;
+  H.tokens.forEach((t,i)=>{ out+=html(r.text.slice(pos,t.s))+'<span class="w" data-i="'+i+'" role="button" tabindex="0" aria-pressed="false">'+html(r.text.slice(t.s,t.e))+'</span>'; pos=t.e; });
+  out+=html(r.text.slice(pos));
+  $("h-phone").className="phone"; $("h-phone").innerHTML=phoneHTML(r,out);
+  $("h-phone").querySelectorAll(".w").forEach(w=>{
+    const tog=()=>{ if(H.locked) return; const i=+w.dataset.i; if(H.sel.has(i)){H.sel.delete(i);w.classList.remove("sel");w.setAttribute("aria-pressed","false");} else {H.sel.add(i);w.classList.add("sel");w.setAttribute("aria-pressed","true");} };
+    w.addEventListener("click",tog);
+    w.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); tog(); } });
+  });
+  $("h-prog").textContent=(H.i+1)+" / "+HUNT.length;
+  $("h-score").textContent=H.score+" ұпай";
+  $("h-task").hidden=false; $("h-result").hidden=true; $("h-check").hidden=false; $("h-next").hidden=true;
+}
+$("open-hunt").addEventListener("click",startHunt);
+$("h-check").addEventListener("click",()=>{
+  H.locked=true; $("h-phone").classList.add("locked");
+  const ws=[...$("h-phone").querySelectorAll(".w")];
+  const targetTok=new Set(H.targets.flatMap(g=>g.toks));
+  const found=H.targets.filter(g=>g.toks.some(i=>H.sel.has(i)));
+  const missed=H.targets.filter(g=>!g.toks.some(i=>H.sel.has(i)));
+  const falseT=[...H.sel].filter(i=>!targetTok.has(i));
+  let pts,max;
+  if(H.targets.length){ max=10*H.targets.length; pts=Math.max(0,10*found.length-3*falseT.length); }
+  else { max=10; pts=Math.max(0,10-3*falseT.length); }
+  H.score+=pts; H.max+=max;
+  // paint words
+  H.sources.forEach(g=>g.toks.forEach(i=>ws[i].classList.add("src")));
+  H.targets.forEach(g=>{ const hit=found.includes(g); g.toks.forEach(i=>{ ws[i].style.setProperty("--c","var(--c-"+g.sp.cat+")"); ws[i].classList.remove("sel"); ws[i].classList.add(hit?"hit":"miss"); }); });
+  falseT.forEach(i=>{ ws[i].classList.remove("sel"); ws[i].classList.add("false"); });
+  // report
+  let head;
+  if(!H.targets.length) head=falseT.length?"Бұл шынайы хабарлама еді. Белгілеудің қажеті жоқ болатын.":"Дұрыс! Бұл шынайы хабарлама: манипуляция белгісі жоқ, дереккөзі бар.";
+  else head="Таптыңыз: "+found.length+" / "+H.targets.length+(falseT.length?" · Артық белгі: "+falseT.length:"");
+  const items=H.targets.map(g=>{ const c=CAT[g.sp.cat], hit=found.includes(g);
+    return '<li class="'+(hit?"":"missed")+'" style="--c:var(--c-'+c.id+')"><i>'+(hit?"✓":"!")+'</i><span><b>«'+html(g.sp.txt)+'»</b> · '+html(c.name)+'<em>'+(hit?"Таптыңыз. ":"Өткізіп алдыңыз. ")+html(c.desc)+'</em></span></li>'; });
+  if(H.sources.length) items.push('<li style="--c:var(--c-source)"><i>✓</i><span><b>'+H.sources.map(g=>"«"+html(g.sp.txt)+"»").join(", ")+'</b> · Дереккөз белгісі<em>Нақты мекеме, күн және ресми сайт ақпаратқа сенім қосады.</em></span></li>');
+  falseT.slice(0,3).forEach(i=>items.push('<li style="--c:#8A8F98"><i>×</i><span><b>«'+html(H.tokens[i]?HUNT[H.i].text.slice(H.tokens[i].s,H.tokens[i].e):"")+'»</b><em>Бұл сөз өздігінен манипуляция белгісі емес (−3 ұпай).</em></span></li>'));
+  $("h-result").innerHTML='<div class="hres"><div class="sum">'+html(head)+'</div><div class="verdict-tag" style="--v:'+(pts>=max*0.7?"var(--good)":pts>=max*0.4?"var(--warn)":"var(--bad)")+'">+'+pts+' / '+max+' ұпай</div><div class="hkey"><span><b style="background:rgba(229,72,77,.3);box-shadow:0 0 0 2px #E5484D"></b>таптыңыз</span><span><b style="box-shadow:0 0 0 2px #E5484D;background:repeating-linear-gradient(135deg,rgba(229,72,77,.25) 0 3px,transparent 3px 6px)"></b>өткізіп алдыңыз</span><span><b style="background:rgba(120,120,120,.25)"></b>артық белгі</span><span><b style="background:rgba(47,158,68,.2);box-shadow:0 0 0 2px #2F9E44"></b>дереккөз</span></div><ul>'+items.join("")+'</ul></div>';
+  $("h-task").hidden=true; $("h-result").hidden=false; $("h-check").hidden=true; $("h-next").hidden=false;
+  $("h-next").textContent=H.i===HUNT.length-1?"Нәтижені көру":"Келесі скриншот";
+  $("h-score").textContent=H.score+" ұпай";
+  $("h-next").focus({preventScroll:true});
+});
+$("h-next").addEventListener("click",()=>{ $("h-phone").classList.remove("locked"); if(H.i<HUNT.length-1){H.i++;huntRound();window.scrollTo(0,0);} else endGame("hunt",H.score,H.max); });
+
+/* ---- game 2: family chat ---- */
+const PEOPLE={"Апай":"#C0567A","Ағай":"#3B6EA8","Әпке":"#8457E0","Ата":"#8D6A4A","Інім":"#0F9F8C"};
+const CHAT=[
+  {from:"Апай",kind:"Фейк: тізбекті хабарлама",text:"ШҰҒЫЛ!!! Ертең облыстағы судың бәрі улы болады, кранды мүлдем ашпаңыздар. Бір танысым әкімдікте істейді, сол айтты. Тез арада барлығына жіберіңдер!",
+   check:"Әкімдіктің ресми сайтында да, жаңалық сайттарында да бұл туралы бір де бір хабар жоқ.",explain:"Апа, бұл хабардың дереккөзі жоқ, ресми сайтта мұндай ақпарат жоқ. Бөліспей-ақ қояйық.",
+   share:[0,"Хабар 4 топқа тарады. Көршілер дүкендегі бөтелке суды түгел сатып алып, дүрбелең басталды."],chk:[7,"Хабардың жалған екенін анықтадыңыз. Бірақ туыстарыңыз әлі сеніп отыр."],del:[4,"Хабарды жойдыңыз, бірақ Апай оны басқа топтарға таратып жіберді."],exp:[10,"Апай рахмет айтып, өзі жіберген басқа топтарға да түзету жазды."],
+   why:"Эмоция, асықтыру және «бір танысым» деген белгісіз дереккөз фейктің үш белгісі. Фейкті тоқтатудың ең жақсы жолы жақындарға сабырмен түсіндіру."},
+  {from:"Ағай",kind:"Алаяқтық: жалған сыйлық",text:"Банк 15 жылдығына орай әр клиентке 50 000 ₸ сыйлық береді екен! Тек бүгін ғана. Мына сілтемеге өтіп, карта нөміріңді енгіз: bit.ly/sylyk-50",
+   check:"Банктің ресми қосымшасында мұндай акция жоқ. Сілтеме қысқартылған, ол банк сайтына апармайды.",explain:"Ағай, бұл алаяқтық! Банк ешқашан сілтеме арқылы карта нөмірін сұрамайды. Ешкім енгізбесін.",
+   share:[0,"Нағашы апаңыз сілтемеге өтіп, карта деректерін енгізді. Ертеңіне шотынан ақша жоғалды."],chk:[7,"Алаяқтықты анықтап, өзіңіз алданбадыңыз. Бірақ топтағылар ескертусіз қалды."],del:[5,"Өзіңіз қауіпсізсіз, бірақ топтағы басқалар сілтемеге өтуі мүмкін."],exp:[10,"Ағай хабарды өшіріп, бәрін ескертті. Ешкім алданбады."],
+   why:"«Тегін сыйлық», «тек бүгін», қысқартылған сілтеме және карта нөмірін сұрау алаяқтықтың классикалық белгілері."},
+  {from:"Әпке",kind:"Шынайы хабарлама",text:"Аудан әкімдігінің баспасөз қызметі хабарлады: 22 қарашада сағат 10:00-ден 16:00-ге дейін 3-шағын ауданда жоспарлы жөндеуге байланысты жарық болмайды. Толығы ресми сайтта.",
+   check:"Әкімдіктің ресми сайтында дәл осы хабарландыру тұр. Ақпарат рас.",explain:"Рахмет, әпке! Ресми сайттан да көрдім, рас екен.",
+   share:[10,"Туыстарыңыз алдын ала дайындалып, ешкімнің жұмысы бұзылмады."],chk:[9,"Ресми сайттан растадыңыз. Енді сеніммен бөлісуге болады."],del:[2,"Хабарды көрмей қалған Ағай жарық сөнгенде маңызды жұмысын сақтамай қалды."],exp:[6,"Әпкеңіз қуанды, бірақ басқа топтардағы туыстар бұл туралы білмей қалды."],
+   why:"Нақты мекеме, күні, уақыты және ресми дереккөз шынайы ақпараттың белгілері. Әр хабарламаға күдіктенудің қажеті жоқ, дұрыс ақпаратты бөлісу де пайдалы."},
+  {from:"Ата",kind:"Фейк: денсаулық",text:"Дәрігерлер жасырып отыр! Таңертең бір қасық сода ішсеңіз, қан қысымы мүлдем жазылады. Дәріні тастаңдар. Ешкім айтпайды бұны, барлығына жіберіңдер!",
+   check:"Ресми медициналық дереккөздерде бұл туралы дерек жоқ. Дәрігерлер дәріні өз бетімен тастауға кеңес бермейді.",explain:"Ата, дәріңізді тастамаңыз. Бұл тексерілмеген хабар. Емді тек дәрігермен ақылдасып өзгерту керек.",
+   share:[0,"Хабарды оқыған көршіңіз дәрісін ішуді тоқтатты. Қысымы көтеріліп, жедел жәрдем шақыруға тура келді."],chk:[7,"Хабардың жалған екенін білдіңіз, бірақ атаңыз әлі сеніп жүр."],del:[3,"Хабар жойылды, бірақ атаңыз дәрісін тастап қоюы мүмкін."],exp:[10,"Атаңыз дәрісін ішуді жалғастырып, дәрігерге барып ақылдасатын болды."],
+   why:"«Дәрігерлер жасырып отыр», «мүлдем жазылады» деген сөздер жалған ем туралы хабарламаларға тән. Денсаулыққа қатысты фейк ең қауіпті фейк."},
+  {from:"Інім",kind:"Кликбейт",text:"Мына видеоны соңына дейін қараңыз, сенбейсіз! Әлемдегі ең үлкен құпия ашылды 😱😱",
+   check:"Видеоны қарап шықтыңыз: ішінде ешқандай құпия жоқ, ол тек көрілім жинауға арналған.",explain:"Інім, бұл кликбейт қой. Тақырыбы қызықтырады, ішінде ештеңе жоқ.",
+   share:[2,"Видео топта тарады, бірақ ешкімге пайдасы болмады, біреулер уақытын текке жіберді."],chk:[10,"Видеоның бос екенін өзіңіз көрдіңіз. Енді мұндай тақырыптарды бірден таныйсыз."],del:[8,"Уақытыңызды үнемдедіңіз. Кликбейт зиянды емес, бірақ уақытты алады."],exp:[7,"Інің күліп, келесі жолы тақырыбына емес, мазмұнына қарайтынын айтты."],
+   why:"«Сенбейсіз», «соңына дейін қараңыз», «құпия» деген сөздер көрілім жинауға арналған кликбейттің белгісі."},
+  {from:"Апай",kind:"Ескі жаңалық",text:"Мектептер ертеңнен бастап бір айға жабылады екен! Балаларды мектепке жібермеңдер. (Скриншот: «Жаңалықтар», 2020 жылы 16 наурыз)",
+   check:"Скриншоттағы күнге қарадыңыз: бұл 2020 жылғы ескі жаңалық. Қазір мектептер жабылмайды.",explain:"Апа, бұл 2020 жылғы жаңалық, қазір мектептер ашық. Балаларды жіберейік.",
+   share:[0,"Бірнеше ата-ана балаларын мектепке жібермей, балалар сабақтан қалды."],chk:[10,"Күнін тексеріп, ескі жаңалық екенін бірден анықтадыңыз."],del:[4,"Хабарды жойдыңыз, бірақ Апай балаларын мектепке жібермеуі мүмкін."],exp:[9,"Апай түсініп, хабарды басқа топтардан да өшірді."],
+   why:"Ескі жаңалықты жаңадай көрсету жиі кездесетін әдіс. Хабарламаның күніне әрдайым қараңыз."},
+  {from:"Ағай",kind:"Өсек: дүрбелең",text:"Бір танысым айтты, ертең бензин 2 есе қымбаттайды. Бүгін ғана толтырып алыңдар, кешікпеңдер!",
+   check:"Ресми мекемелер мен жаңалық сайттарында бензин бағасы туралы мұндай хабар жоқ.",explain:"Ағай, бұл тексерілмеген өсек. Ресми хабар жоқ, асықпай-ақ қояйық.",
+   share:[0,"Барлығы жанармай бекетіне ағылып, ұзын кезек пайда болды. Бензин қымбаттамады."],chk:[10,"Ресми дереккөзден тексеріп, өсекке ермедіңіз."],del:[5,"Өзіңіз сенбедіңіз, бірақ топтағылар бекетке жүгірді."],exp:[9,"Ағай өсек екенін түсініп, бекетке бармады."],
+   why:"«Бір танысым айтты» деген белгісіз дереккөз және «бүгін ғана», «кешікпеңдер» деген асықтыру дүрбелең тудыратын өсектің белгісі."},
+  {from:"Әпке",kind:"Шынайы хабарлама",text:"Мектеп директорының ресми парақшасында жарияланды: 25 қарашада сағат 18:00-де ата-аналар жиналысы өтеді. Барлық ата-ана келуі керек.",
+   check:"Мектептің ресми парақшасында хабарландыру бар. Ақпарат рас.",explain:"Рахмет, әпке, барамын.",
+   share:[10,"Туыстарыңыз жиналысқа уақытында келді."],chk:[9,"Растадыңыз. Енді бөлісуге болады."],del:[2,"Бірнеше ата-ана жиналыстан хабарсыз қалды."],exp:[6,"Әпкеңіз қуанды, бірақ басқа ата-аналар хабарсыз қалуы мүмкін."],
+   why:"Нақты күн, уақыт және ресми дереккөз бар. Пайдалы шынайы ақпаратты бөлісу де медиа сауаттылықтың бір бөлігі."}
+];
+const CH={i:0,score:0,trust:50,timer:null};
+const ACTIONS=[["share","Бөлісемін","басқа топтарға жіберу"],["chk","Тексеремін","дереккөзін іздеу"],["del","Жоямын","назар аудармау"],["exp","Түсіндіремін","топқа жауап жазу"]];
+function chatAdd(cls,inner){ const d=document.createElement("div"); d.className=cls; d.innerHTML=inner; $("c-body").appendChild(d); $("c-body").scrollTop=$("c-body").scrollHeight; return d; }
+function setTrust(){ $("c-trust").style.width=CH.trust+"%"; $("c-trust").style.background=CH.trust>=65?"var(--good)":CH.trust>=40?"var(--warn)":"var(--bad)"; $("c-trust-n").textContent=CH.trust; }
+function startChat(){ clearTimeout(CH.timer); CH.i=0; CH.score=0; CH.trust=50; $("c-body").innerHTML=""; setTrust(); gpart("g-chat");
+  chatAdd("sysmsg","Сіз «Біздің әулет» тобына қосылдыңыз. Туыстарыңыздан хабарлама келеді: әрқайсысына шешім қабылдаңыз."); chatNext(); }
+function chatNext(){
+  const m=CHAT[CH.i];
+  $("c-prog").textContent=(CH.i+1)+" / "+CHAT.length;
+  $("c-side").innerHTML='<span class="kicker">Отбасы чаты</span><p class="typing">'+html(m.from)+' жазып жатыр…</p>';
+  const t=chatAdd("typing",html(m.from)+" жазып жатыр…");
+  const delay=window.matchMedia("(prefers-reduced-motion: reduce)").matches?0:900;
+  CH.timer=setTimeout(()=>{ t.remove();
+    chatAdd("bubble",'<div class="from" style="color:'+(PEOPLE[m.from]||"#1f7a4d")+'">'+html(m.from)+'</div>'+html(m.text)+'<span class="tm">'+(9+CH.i)+':'+(10+CH.i*6)+'</span>');
+    $("c-side").innerHTML='<span class="kicker">'+(CH.i+1)+'-хабарлама · '+html(m.from)+'</span><p>Не істейсіз?</p><div class="choices4">'+ACTIONS.map(a=>'<button type="button" data-act="'+a[0]+'">'+a[1]+'<small>'+a[2]+'</small></button>').join("")+'</div>';
+    $("c-side").querySelectorAll("[data-act]").forEach(b=>b.addEventListener("click",()=>chatChoose(b.dataset.act)));
+    $("c-side").querySelector("[data-act]").focus({preventScroll:true});
+  },delay);
+}
+function chatChoose(act){
+  const m=CHAT[CH.i], [p,cons]=m[act];
+  if(act==="share") chatAdd("sysmsg","Сіз хабарламаны басқа топтарға жібердіңіз.");
+  if(act==="chk") chatAdd("sysmsg","Тексеру нәтижесі: "+html(m.check));
+  if(act==="del") chatAdd("sysmsg","Сіз хабарламаны өзіңізден жойдыңыз.");
+  if(act==="exp") chatAdd("bubble me",html(m.explain)+'<span class="tm">'+(9+CH.i)+':'+(12+CH.i*6)+' ✓✓</span>');
+  chatAdd("sysmsg "+(p>=8?"good":p<=3?"bad":""),html(cons));
+  CH.score+=p; CH.trust=Math.max(0,Math.min(100,CH.trust+(p-5)*2)); setTrust();
+  const best=ACTIONS.filter(a=>m[a[0]][0]===Math.max(...ACTIONS.map(x=>m[x[0]][0]))).map(a=>"«"+a[1]+"»").join(", ");
+  const tag=p>=9?["Үздік шешім","var(--good)"]:p>=6?["Жақсы шешім","var(--good)"]:p>=3?["Жартылай дұрыс","var(--warn)"]:["Қате шешім","var(--bad)"];
+  $("c-side").innerHTML='<span class="kind">'+html(m.kind)+'</span><span class="verdict-tag" style="--v:'+tag[1]+'">'+tag[0]+' · +'+p+'</span><p class="lesson">'+html(m.why)+'</p>'+(p<10?'<p class="lesson" style="color:var(--muted)">Ең жақсы шешім: '+best+'</p>':'')+'<button class="btn" id="c-next" type="button">'+(CH.i===CHAT.length-1?"Нәтижені көру":"Келесі хабарлама")+'</button>';
+  $("c-next").addEventListener("click",()=>{ if(CH.i<CHAT.length-1){CH.i++;chatNext();} else endGame("chat",CH.score,CHAT.length*10); });
+  $("c-next").focus({preventScroll:true});
+}
+$("open-chat").addEventListener("click",startChat);
+
+/* ---- certificate ---- */
+async function drawCert(name){
+  try{await document.fonts.ready;}catch(e){}
+  const W=1600,H=1130,c=document.createElement("canvas"); c.width=W;c.height=H; const x=c.getContext("2d");
+  const DISP='"Unbounded","Segoe UI",sans-serif', BODY='"IBM Plex Sans","Segoe UI",sans-serif';
+  const played=[GS.hunt,GS.chat].filter(Boolean), avg=Math.round(played.reduce((s,r)=>s+pct(r),0)/played.length), L=levelFor(avg);
+  x.fillStyle="#F5F6F8"; x.fillRect(0,0,W,H);
+  x.fillStyle="#FFFFFF"; rr(x,50,50,W-100,H-100,28); x.fill();
+  x.strokeStyle="#0F5BD8"; x.lineWidth=4; rr(x,74,74,W-148,H-148,20); x.stroke();
+  x.fillStyle="#0F5BD8"; x.fillRect(74,74,22,H-148);
+  // brand
+  x.fillStyle="#0F5BD8"; rr(x,140,130,70,70,18); x.fill();
+  x.strokeStyle="#fff"; x.lineWidth=4; x.beginPath(); x.ellipse(175,165,24,14,0,0,Math.PI*2); x.stroke(); x.fillStyle="#fff"; x.beginPath(); x.arc(175,165,7,0,Math.PI*2); x.fill();
+  x.fillStyle="#0E1726"; x.font="700 36px "+DISP; x.textBaseline="middle"; x.fillText("Visual Choice",232,152);
+  x.fillStyle="#5B6678"; x.font="500 24px "+BODY; x.fillText("медиа сауаттылық платформасы",232,186);
+  x.textBaseline="alphabetic";
+  x.fillStyle="#0E1726"; x.font="700 92px "+DISP; x.fillText("СЕРТИФИКАТ",140,340);
+  x.fillStyle="#5B6678"; x.font="500 32px "+BODY; x.fillText("«Детектив алаңы» сынағынан өткені үшін беріледі",140,398);
+  x.fillStyle="#0E1726"; x.font="700 64px "+DISP;
+  let nm=(name||"").trim()||"Медиа детектив"; while(x.measureText(nm).width>1300&&nm.length>3) nm=nm.slice(0,-1);
+  x.fillText(nm,140,520);
+  x.strokeStyle="#DDE2E9"; x.lineWidth=2; x.beginPath(); x.moveTo(140,556); x.lineTo(1460,556); x.stroke();
+  // level badge
+  const col=avg>=65?"#1F8A4C":avg>=40?"#B9730A":"#C8343B";
+  x.font="700 44px "+DISP; const bw=x.measureText(L[1]).width+80;
+  x.fillStyle=col+"1F"; rr(x,140,610,bw,86,43); x.fill(); x.fillStyle=col; x.textBaseline="middle"; x.fillText(L[1],180,655); x.textBaseline="alphabetic";
+  x.fillStyle="#5B6678"; x.font="500 30px "+BODY; x.fillText("деңгейі · жалпы нәтиже "+avg+"%",140+bw+28,664);
+  // scores
+  const rows=[["Фейк аңшысы",GS.hunt,"манипуляцияны табу"],["Отбасы чаты",GS.chat,"дұрыс шешім қабылдау"]];
+  rows.forEach((r,i)=>{ const y=790+i*84;
+    x.fillStyle="#0E1726"; x.font="600 36px "+BODY; x.fillText(r[0],140,y);
+    x.fillStyle="#5B6678"; x.font="400 28px "+BODY; x.fillText(r[2],460,y);
+    x.fillStyle="#0E1726"; x.font="600 36px "+'"IBM Plex Mono",monospace'; x.textAlign="right"; x.fillText(r[1]?r[1].score+" / "+r[1].max:"—",1460,y); x.textAlign="left"; });
+  x.fillStyle="#5B6678"; x.font="400 26px "+BODY; x.fillText("Берілген күні: "+new Date().toLocaleDateString("kk-KZ"),140,H-130);
+  x.textAlign="right"; x.fillText("Контентті талдау және жастардың медиа сауаттылығын арттыру жобасы",1460,H-130); x.textAlign="left";
+  return new Promise(res=>c.toBlob(res,"image/png"));
+}
+$("cert-make").addEventListener("click",async()=>{
+  const b=$("cert-make"); b.disabled=true; b.textContent="Сертификат жасалуда...";
+  try{ const blob=await drawCert($("cert-name").value);
+    openImage(blob,"Медиа детектив сертификаты","visual-choice-sertifikat.png","Мен Visual Choice «Детектив алаңы» сынағынан өттім!","Сертификатты сақтап немесе көшіріп, достарыңызбен бөлісіңіз.",b);
+  } finally { b.disabled=false; b.textContent="Сертификат алу"; }
+});
 
 /* ================= Upload wiring ================= */
 $("file").addEventListener("change",e=>{handleImage(e.target.files[0]);e.target.value="";});
@@ -729,7 +1135,7 @@ const drop=$("drop");
 ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
 drop.addEventListener("drop",e=>{const f=e.dataTransfer&&e.dataTransfer.files[0]; if(f) handleImage(f);});
 document.addEventListener("paste",e=>{
-  if(e.target&&e.target.tagName==="TEXTAREA") return;
+  if(e.target&&(e.target.tagName==="TEXTAREA"||e.target.tagName==="INPUT")) return;
   const items=e.clipboardData?e.clipboardData.items:[];
   for(const it of items){ if(it.kind==="file"&&it.type.startsWith("image/")){ e.preventDefault(); handleImage(it.getAsFile()); return; } }
 });
@@ -750,6 +1156,17 @@ $("demo").addEventListener("click",()=>{
   x.fillStyle="#DCF8C6"; rr(x,330,160+bh,330,70,16); x.fill(); x.fillStyle="#111"; x.font="28px Arial"; x.fillText("Рас па бұл?",355,205+bh);
   c.toBlob(b=>handleImage(new File([b],"mysal.png",{type:"image/png"})),"image/png");
 });
+
+/* ================= Offline (PWA) ================= */
+try{
+  if("serviceWorker" in navigator && location.protocol==="https:"){
+    navigator.serviceWorker.register("sw.js").then(()=>navigator.serviceWorker.ready).then(()=>{ $("offline-ok").hidden=false; }).catch(()=>{});
+  }
+}catch(e){}
+let installEv=null;
+window.addEventListener("beforeinstallprompt",e=>{ e.preventDefault(); installEv=e; $("install").hidden=false; });
+$("install").addEventListener("click",async()=>{ if(!installEv) return; installEv.prompt(); try{ await installEv.userChoice; }catch(e){} installEv=null; $("install").hidden=true; });
+window.addEventListener("appinstalled",()=>{ $("install").hidden=true; });
 
 route();
 })();
