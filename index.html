@@ -10,7 +10,7 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 /* Layout: one quiet upload screen; after upload the screenshot itself becomes the report, verdict beside it */
 :root{
@@ -18,7 +18,7 @@
   --good:#1F8A4C; --warn:#B9730A; --bad:#C8343B;
   --c-emotion:#E5484D; --c-urgency:#EE7A12; --c-share:#D6409F; --c-general:#8457E0; --c-vague:#8D6A4A;
   --c-clickbait:#D49B00; --c-promise:#0F9F8C; --c-phishing:#A3001B; --c-link:#0089C2; --c-format:#6E7787; --c-source:#2F9E44;
-  --f-display:"Unbounded","Segoe UI",system-ui,sans-serif;
+  --f-display:"Montserrat","Segoe UI",system-ui,sans-serif;
   --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
   --radius:16px;
@@ -39,7 +39,7 @@
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;min-height:100vh;display:flex;flex-direction:column}
-h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-0.015em}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-0.015em;font-weight:800}
 .wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 20px}
 button{font:inherit}
 :focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:2px}
@@ -812,7 +812,7 @@ async function drawCard(){
   try{await document.fonts.ready;}catch(e){}
   const a=S.a, v=verdictOf(a.index), lvl=levelOf(a.index);
   const W=1080,H=1350,c=document.createElement("canvas"); c.width=W;c.height=H; const x=c.getContext("2d");
-  const DISP='"Unbounded","Segoe UI",sans-serif', BODY='"IBM Plex Sans","Segoe UI",sans-serif';
+  const DISP='"Montserrat","Segoe UI",sans-serif', BODY='"IBM Plex Sans","Segoe UI",sans-serif';
   x.fillStyle="#F5F6F8"; x.fillRect(0,0,W,H);
   x.fillStyle=v.hex; x.fillRect(0,0,W,18);
   // brand
@@ -1088,7 +1088,7 @@ $("open-chat").addEventListener("click",startChat);
 async function drawCert(name){
   try{await document.fonts.ready;}catch(e){}
   const W=1600,H=1130,c=document.createElement("canvas"); c.width=W;c.height=H; const x=c.getContext("2d");
-  const DISP='"Unbounded","Segoe UI",sans-serif', BODY='"IBM Plex Sans","Segoe UI",sans-serif';
+  const DISP='"Montserrat","Segoe UI",sans-serif', BODY='"IBM Plex Sans","Segoe UI",sans-serif';
   const played=[GS.hunt,GS.chat].filter(Boolean), avg=Math.round(played.reduce((s,r)=>s+pct(r),0)/played.length), L=levelFor(avg);
   x.fillStyle="#F5F6F8"; x.fillRect(0,0,W,H);
   x.fillStyle="#FFFFFF"; rr(x,50,50,W-100,H-100,28); x.fill();
