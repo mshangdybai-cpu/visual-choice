@@ -38,14 +38,14 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;min-height:100vh;display:flex;flex-direction:column}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:1rem;line-height:1.55;min-height:100vh;display:flex;flex-direction:column}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-0.015em;font-weight:800}
 .wrap{width:100%;max-width:1120px;margin:0 auto;padding:0 20px}
 button{font:inherit}
 :focus-visible{outline:3px solid color-mix(in srgb,var(--accent) 55%,transparent);outline-offset:2px}
 [hidden]{display:none!important}
 
-header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:18px;padding-bottom:18px}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding-top:18px;padding-bottom:18px}
 .brand{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none}
 .brand b{font:700 1.02rem var(--f-display)}
 nav a{color:var(--muted);text-decoration:none;font-size:.9rem;font-weight:500;padding:6px 10px;border-radius:8px}
@@ -260,10 +260,54 @@ details.edit .row{display:flex;gap:10px;align-items:center;margin-top:8px;flex-w
 .g-end p{margin:0;color:var(--muted);font-size:1.02rem}
 .e-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px}
 .install{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font-weight:600;font-size:.84rem;cursor:pointer}
+/* accessibility */
+.skip{position:absolute;left:12px;top:-60px;z-index:50;background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:10px 14px;font-weight:600;cursor:pointer}
+.skip:focus{top:10px}
+.hdr-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.a11y-btn{appearance:none;display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px 6px 7px;font-weight:600;font-size:.84rem;cursor:pointer}
+.a11y-btn:hover,.a11y-btn[aria-expanded="true"]{border-color:var(--accent)}
+.a11y-btn svg{flex:none}
+@media (max-width:560px){.a11y-btn .lbl{display:none}.a11y-btn{padding:6px}}
+.a11y{position:fixed;top:72px;right:max(16px,calc((100vw - 1120px)/2 + 20px));width:min(380px,calc(100vw - 32px));max-height:calc(100vh - 90px);overflow:auto;background:var(--surface);color:var(--ink);border:1.5px solid var(--line);border-radius:18px;box-shadow:0 24px 50px -20px rgba(10,20,40,.45);padding:18px;z-index:40;display:grid;gap:14px}
+.a11y header{display:flex;justify-content:space-between;align-items:center}
+.a11y h2{font-size:1.05rem}
+.a11y .grp{display:grid;gap:8px}
+.a11y .grp>span{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.a11y .sizes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.a11y .sizes button{appearance:none;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;padding:8px 0;font-weight:700;cursor:pointer}
+.a11y .toggles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.a11y .toggles button{appearance:none;display:flex;align-items:center;gap:8px;text-align:left;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;padding:10px;font-weight:600;font-size:.86rem;cursor:pointer;line-height:1.25}
+.a11y .toggles button i{flex:none;width:28px;height:28px;border-radius:8px;display:grid;place-items:center;background:var(--surface);font:700 .8rem var(--f-mono);font-style:normal;border:1px solid var(--line)}
+.a11y button[aria-pressed="true"]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface))}
+.a11y button[aria-pressed="true"] i{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.a11y .tts-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.a11y .note{font-size:.82rem;color:var(--muted);margin:0}
+.reading{outline:3px solid #F2B705!important;outline-offset:3px;border-radius:4px}
+/* text size */
+html.a11y-t2{font-size:118.75%}
+html.a11y-t3{font-size:137.5%}
+/* wide spacing */
+html.a11y-space body{letter-spacing:.06em;word-spacing:.14em;line-height:1.95}
+html.a11y-space p,html.a11y-space li{line-height:1.95}
+/* underline links and buttons */
+html.a11y-links a,html.a11y-links button,html.a11y-links .drop{text-decoration:underline!important;text-underline-offset:3px;outline:2px dashed var(--accent);outline-offset:2px}
+/* grayscale */
+html.a11y-gray header.top,html.a11y-gray main,html.a11y-gray footer,html.a11y-gray .modal{filter:grayscale(1)}
+/* no motion */
+html.a11y-still *,html.a11y-still *::before,html.a11y-still *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
+/* big cursor */
+html.a11y-cursor,html.a11y-cursor *{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M6 4l30 18-13 3 8 15-6 3-8-15-11 9z' fill='%23000' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E") 6 4,auto!important}
+/* high contrast: black, yellow, white */
+html.a11y-contrast{--paper:#000;--surface:#000;--ink:#FFF35C;--muted:#FFFFFF;--line:#FFFFFF;--accent:#FFF35C;--accent-ink:#000;--good:#7CFF8A;--warn:#FFB347;--bad:#FF6B6B;color-scheme:dark}
+html.a11y-contrast .panel,html.a11y-contrast .figure,html.a11y-contrast .gcard,html.a11y-contrast .facts>div,html.a11y-contrast .risks article,html.a11y-contrast .questions li,html.a11y-contrast .drop{border-width:2px}
+html.a11y-contrast img{filter:none}
+html.a11y-contrast .drop{border-color:#FFFFFF}
+html.a11y-contrast .bar,html.a11y-contrast .tbar{background:#444}
 @media (prefers-reduced-motion: reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
+<button class="skip" id="skip" type="button">Негізгі мазмұнға өту</button>
 <header class="top">
   <div class="wrap">
     <a class="brand" href="#">
@@ -274,11 +318,50 @@ details.edit .row{display:flex;gap:10px;align-items:center;margin-top:8px;flex-w
       </svg>
       <b>Visual Choice</b>
     </a>
+    <div class="hdr-right">
     <nav><a href="#" id="nav-home">Тексеру</a><a href="#oiyn" id="nav-game">Детектив алаңы</a><a href="#joba" id="nav-about">Жоба туралы</a></nav>
+      <button class="a11y-btn" id="a11y-btn" type="button" aria-expanded="false" aria-controls="a11y-panel" aria-label="Арнайы мүмкіндіктер: үлкен мәтін, контраст, дауыстап оқу">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="var(--accent)"/><circle cx="12" cy="6.4" r="1.7" fill="var(--accent-ink)"/><path d="M6.5 9.3l5.5 1.2 5.5-1.2M12 10.5v3.6M12 14.1l-2.6 4.6M12 14.1l2.6 4.6" stroke="var(--accent-ink)" stroke-width="1.7" fill="none" stroke-linecap="round"/></svg>
+        <span class="lbl">Арнайы мүмкіндіктер</span>
+      </button>
+    </div>
   </div>
 </header>
+<div class="a11y" id="a11y-panel" role="dialog" aria-modal="false" aria-labelledby="a11y-title" hidden>
+  <header><h2 id="a11y-title">Арнайы мүмкіндіктер</h2><button class="x" id="a11y-x" type="button" aria-label="Жабу">×</button></header>
+  <div class="grp"><span>Мәтін өлшемі</span>
+    <div class="sizes">
+      <button type="button" data-size="1" aria-pressed="true" aria-label="Қалыпты өлшем" style="font-size:.95rem">А</button>
+      <button type="button" data-size="2" aria-pressed="false" aria-label="Үлкен өлшем" style="font-size:1.15rem">А+</button>
+      <button type="button" data-size="3" aria-pressed="false" aria-label="Өте үлкен өлшем" style="font-size:1.35rem">А++</button>
+    </div>
+  </div>
+  <div class="grp"><span>Көру</span>
+    <div class="toggles">
+      <button type="button" data-opt="contrast" aria-pressed="false"><i>◐</i>Жоғары контраст</button>
+      <button type="button" data-opt="gray" aria-pressed="false"><i>■</i>Ақ-қара түс</button>
+      <button type="button" data-opt="space" aria-pressed="false"><i>↔</i>Кең аралық</button>
+      <button type="button" data-opt="links" aria-pressed="false"><i>U</i>Батырмаларды белгілеу</button>
+      <button type="button" data-opt="cursor" aria-pressed="false"><i>➚</i>Үлкен курсор</button>
+      <button type="button" data-opt="still" aria-pressed="false"><i>‖</i>Анимациясыз</button>
+    </div>
+  </div>
+  <div class="grp"><span>Дауыстап оқу</span>
+    <div class="toggles">
+      <button type="button" data-opt="tts" aria-pressed="false" style="grid-column:1 / -1"><i>♪</i>Басқан мәтінді және нәтижені дауыстап оқу</button>
+    </div>
+    <div class="tts-row">
+      <button class="small-btn" id="tts-test" type="button">Тыңдап көру</button>
+      <button class="small-btn" id="tts-stop" type="button">Тоқтату</button>
+      <label class="note" for="tts-rate">Жылдамдық</label>
+      <input id="tts-rate" type="range" min="0.6" max="1.4" step="0.1" value="1" style="flex:1;min-width:90px">
+    </div>
+    <p class="note" id="tts-note">Дауыстап оқу қосулы болса, кез келген мәтінді бассаңыз, ол оқылады.</p>
+  </div>
+  <button class="btn ghost" id="a11y-reset" type="button">Бастапқы қалпына келтіру</button>
+</div>
 
-<main class="wrap">
+<main class="wrap" id="main">
   <!-- 1. start -->
   <section class="start" id="v-start">
     <h1>Скриншотты тексер.</h1>
@@ -754,7 +837,7 @@ function drawBoxes(boxes){
     d.style.setProperty("--c","var(--c-"+b.cat+")");
     d.style.left=((b.x0-pad)/S.W*100)+"%"; d.style.top=((b.y0-pad)/S.H*100)+"%";
     d.style.width=((b.x1-b.x0+2*pad)/S.W*100)+"%"; d.style.height=((b.y1-b.y0+2*pad)/S.H*100)+"%";
-    d.dataset.label=CAT[b.cat].name; d.title=CAT[b.cat].name+": "+b.txt;
+    d.dataset.label=CAT[b.cat].name; d.title=CAT[b.cat].name+": "+b.txt; d.setAttribute("role","img"); d.setAttribute("aria-label",CAT[b.cat].name+": "+b.txt);
     host.appendChild(d);
   }
 }
@@ -798,6 +881,7 @@ function showResult(fresh){
   $("legend").hidden=!cats.length;
   $("edit").hidden=false; if(fresh) $("edit-text").value=S.text;
   $("p-guess").hidden=true; $("p-result").hidden=false;
+  a11yAfterResult(a,v);
   if(fresh && window.matchMedia("(max-width:860px)").matches) $("p-result").scrollIntoView({behavior:"smooth",block:"start"});
 }
 $("edit-run").addEventListener("click",()=>{S.text=$("edit-text").value; showResult(false);});
@@ -1156,6 +1240,67 @@ $("demo").addEventListener("click",()=>{
   x.fillStyle="#DCF8C6"; rr(x,330,160+bh,330,70,16); x.fill(); x.fillStyle="#111"; x.font="28px Arial"; x.fillText("Рас па бұл?",355,205+bh);
   c.toBlob(b=>handleImage(new File([b],"mysal.png",{type:"image/png"})),"image/png");
 });
+
+/* ================= Accessibility ================= */
+const A={size:1,contrast:false,gray:false,space:false,links:false,cursor:false,still:false,tts:false,rate:1};
+try{ Object.assign(A,JSON.parse(localStorage.getItem("vc-a11y")||"{}")); }catch(e){}
+const synth=("speechSynthesis" in window)?window.speechSynthesis:null;
+let voice=null, voiceLang="kk-KZ";
+function pickVoice(){
+  if(!synth) return;
+  const vs=synth.getVoices(); const kk=vs.find(v=>/^kk/i.test(v.lang)), ru=vs.find(v=>/^ru/i.test(v.lang));
+  voice=kk||ru||null; voiceLang=kk?kk.lang:(ru?ru.lang:"kk-KZ");
+  $("tts-note").textContent=!synth?"Бұл браузер дауыстап оқуды қолдамайды.":kk?"Қазақ тіліндегі дауыс табылды. Мәтінді бассаңыз, ол оқылады.":ru?"Құрылғыда қазақ дауысы жоқ, мәтін орыс дауысымен оқылады. Қазақ дауысы Microsoft Edge браузерінде және кейбір Android телефондарында бар.":"Құрылғыда сәйкес дауыс табылмады. Microsoft Edge браузерінде қазақ дауысы бар.";
+}
+if(synth){ pickVoice(); try{ synth.addEventListener("voiceschanged",pickVoice); }catch(e){ synth.onvoiceschanged=pickVoice; } }
+let readingEl=null;
+function speak(text,el){
+  if(!synth||!text) return;
+  synth.cancel(); if(readingEl) readingEl.classList.remove("reading");
+  const u=new SpeechSynthesisUtterance(text.replace(/\s+/g," ").trim().slice(0,1500));
+  if(voice) u.voice=voice; u.lang=voiceLang; u.rate=+A.rate||1;
+  if(el){ readingEl=el; el.classList.add("reading"); u.onend=u.onerror=()=>el.classList.remove("reading"); }
+  synth.speak(u);
+}
+function a11yApply(){
+  const h=document.documentElement;
+  h.classList.toggle("a11y-t2",A.size===2); h.classList.toggle("a11y-t3",A.size===3);
+  ["contrast","gray","space","links","cursor","still"].forEach(k=>h.classList.toggle("a11y-"+k,!!A[k]));
+  document.querySelectorAll("#a11y-panel [data-size]").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.size===A.size)));
+  document.querySelectorAll("#a11y-panel [data-opt]").forEach(b=>b.setAttribute("aria-pressed",String(!!A[b.dataset.opt])));
+  $("tts-rate").value=A.rate;
+  if(!A.tts&&synth){ synth.cancel(); if(readingEl) readingEl.classList.remove("reading"); }
+  try{ localStorage.setItem("vc-a11y",JSON.stringify(A)); }catch(e){}
+}
+function a11yOpen(open){ $("a11y-panel").hidden=!open; $("a11y-btn").setAttribute("aria-expanded",String(open)); if(open) $("a11y-x").focus(); }
+$("a11y-btn").addEventListener("click",()=>a11yOpen($("a11y-panel").hidden));
+$("a11y-x").addEventListener("click",()=>{ a11yOpen(false); $("a11y-btn").focus(); });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"&&!$("a11y-panel").hidden){ a11yOpen(false); $("a11y-btn").focus(); } });
+document.addEventListener("click",e=>{ if(!$("a11y-panel").hidden && !e.target.closest("#a11y-panel") && !e.target.closest("#a11y-btn")) a11yOpen(false); });
+document.querySelectorAll("#a11y-panel [data-size]").forEach(b=>b.addEventListener("click",()=>{ A.size=+b.dataset.size; a11yApply(); }));
+document.querySelectorAll("#a11y-panel [data-opt]").forEach(b=>b.addEventListener("click",()=>{
+  const k=b.dataset.opt; A[k]=!A[k]; a11yApply();
+  if(k==="tts"&&A.tts) speak("Дауыстап оқу қосылды. Кез келген мәтінді бассаңыз, ол оқылады.");
+}));
+$("tts-rate").addEventListener("input",e=>{ A.rate=+e.target.value; a11yApply(); });
+$("tts-test").addEventListener("click",()=>speak("Сәлеметсіз бе! Бұл Visual Choice. Скриншотты жүктесеңіз, ондағы манипуляция белгілерін тауып, дауыстап айтып беремін."));
+$("tts-stop").addEventListener("click",()=>{ if(synth) synth.cancel(); if(readingEl) readingEl.classList.remove("reading"); });
+$("a11y-reset").addEventListener("click",()=>{ Object.assign(A,{size:1,contrast:false,gray:false,space:false,links:false,cursor:false,still:false,tts:false,rate:1}); a11yApply(); });
+// read whatever text is clicked, without blocking the click itself
+document.addEventListener("click",e=>{
+  if(!A.tts||e.target.closest("#a11y-panel")||e.target.closest("#a11y-btn")) return;
+  const el=e.target.closest("h1,h2,h3,p,li,label,summary,.bubble,.sysmsg,.pill,.kicker,.verdict-tag,.compare,.flag,.score,button,a,.w");
+  if(el) speak(el.innerText||el.textContent,el);
+},true);
+// spoken summary after each scan
+function a11yAfterResult(a,v){
+  const found=CATS.filter(c=>!c.positive&&a.counts[c.id]>0).map(c=>c.name+": "+a.words[c.id].slice(0,2).join(", "));
+  $("shot-img").alt="Тексерілген скриншот. "+(found.length?"Суретте белгіленген манипуляция белгілері: "+found.join("; "):"Манипуляция белгісі табылмады")+".";
+  if(!A.tts) return;
+  speak("Сенімділік индексі: "+a.index+", жүзден. "+v.label+". "+(found.length?"Табылған белгілер. "+found.join(". "):"Манипуляция белгісі табылмады")+". "+(a.noSource?"Дереккөз көрсетілмеген.":""));
+}
+$("skip").addEventListener("click",()=>{ const m=$("main"); m.setAttribute("tabindex","-1"); m.focus(); });
+a11yApply();
 
 /* ================= Offline (PWA) ================= */
 try{

@@ -1,5 +1,5 @@
 /* Visual Choice offline cache */
-const VERSION = "vc-2026-11-26a";
+const VERSION = "vc-2026-11-27a";
 const FILES = [
   "./", "index.html", "manifest.json",
   "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
